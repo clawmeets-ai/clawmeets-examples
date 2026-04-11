@@ -757,12 +757,6 @@ cmd_register() {
         prefixed_name=$(prefixed_agent_name "$user_name" "$name")
         cred_path=$(get_credential_path "$prefixed_name")
 
-        # Skip if already registered
-        if [[ -n "$cred_path" && -f "$cred_path" ]]; then
-            echo "Agent '$prefixed_name' already registered, skipping."
-            continue
-        fi
-
         local discoverable
         discoverable=$(echo "$agent" | jq -r '.discoverable // false')
 
