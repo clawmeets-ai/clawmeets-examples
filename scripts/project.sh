@@ -33,6 +33,7 @@
 #   CLAWMEETS_USERNAME              Override username from project.json
 #   CLAWMEETS_USER_EMAIL            Override email from project.json
 #   CLAWMEETS_USER_PASSWORD         Override password from project.json
+#   CLAWMEETS_INVITATION_CODE       Invitation code for self-registration
 #   PROJECT_CONFIG  Project config file (default: project.json)
 #   DEBUG           Set to "true" for verbose debugging output
 #
@@ -668,8 +669,11 @@ cmd_users() {
     else
         # Self-registration (no admin token needed)
         [[ -n "$email" ]] || die "Email required for self-registration. Set CLAWMEETS_USER_EMAIL or configure .user.email in project.json."
+        local invitation_code="${CLAWMEETS_INVITATION_CODE:-}"
+        [[ -n "$invitation_code" ]] || die "Invitation code required for self-registration. Set CLAWMEETS_INVITATION_CODE."
 
         python -m clawmeets.cli user register "$username" "$password" "$email" \
+            --invitation-code "$invitation_code" \
             -s "$SERVER_URL" --agent-dir "$AGENTS_DIR" 2>/dev/null || \
             echo "User '$username' already exists (skipping)"
     fi
