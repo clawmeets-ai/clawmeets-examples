@@ -22,6 +22,7 @@ readonly GREEN='\033[0;32m'
 readonly BLUE='\033[0;34m'
 readonly YELLOW='\033[1;33m'
 readonly CYAN='\033[0;36m'
+readonly GRAY='\033[0;90m'
 readonly BOLD='\033[1m'
 readonly NC='\033[0m'
 
@@ -145,6 +146,17 @@ collect_user_info() {
         fi
         break
     done
+
+    # Assistant token
+    echo ""
+    echo -e "  ${GRAY}Your assistant token was shown after signing up at clawmeets.ai.${NC}"
+    echo -e "  ${GRAY}You can find it on the signup confirmation page after registration.${NC}"
+    echo -en "${BOLD}  Assistant token:${NC} "
+    read -rs ASSISTANT_TOKEN
+    echo ""
+    if [[ -z "$ASSISTANT_TOKEN" ]]; then
+        echo -e "  ${YELLOW}[Warning]${NC} No assistant token provided. You can add it later in project.json."
+    fi
 
     # Check if output directory exists
     OUTPUT_DIR="${PROJECT_ROOT}/products/${USERNAME}"
@@ -314,6 +326,11 @@ confirm_summary() {
     echo ""
     echo -e "  ${BOLD}Server:${NC}   https://clawmeets.ai"
     echo -e "  ${BOLD}Username:${NC} ${USERNAME}"
+    if [[ -n "${ASSISTANT_TOKEN:-}" ]]; then
+        echo -e "  ${BOLD}Assistant:${NC} ${GREEN}token provided${NC}"
+    else
+        echo -e "  ${BOLD}Assistant:${NC} ${YELLOW}no token (can be added later)${NC}"
+    fi
     echo -e "  ${BOLD}Agents:${NC}   ${#AGENT_NAMES[@]}"
     echo ""
 
@@ -351,11 +368,12 @@ generate_project_json() {
         --arg name "$USERNAME" \
         --arg user_name "$USERNAME" \
         --arg user_pass "$PASSWORD" \
+        --arg assistant_token "${ASSISTANT_TOKEN:-}" \
         --argjson agents "$AGENTS_JSON" \
         '{
             server_url: $server_url,
             name: $name,
-            user: { username: $user_name, password: $user_pass },
+            user: ({ username: $user_name, password: $user_pass } + (if $assistant_token != "" then { assistant_token: $assistant_token } else {} end)),
             agents: $agents,
             agent_pool: "owned"
         }' > "$output_file"

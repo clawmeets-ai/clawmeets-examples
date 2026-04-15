@@ -816,6 +816,90 @@ cmd_register() {
             echo "Registered worker agent '$prefixed_name'"
         fi
     done
+
+    # Set up assistant credentials locally (if assistant_token is provided)
+    _setup_assistant_credentials "$user_name" "$user_password"
+}
+
+_setup_assistant_credentials() {
+    local user_name="$1"
+    local user_password="$2"
+
+    # Read assistant token from project.json
+    local assistant_token=""
+    if [[ -f "$PROJECT_CONFIG" ]]; then
+        assistant_token=$(jq -r '.user.assistant_token // empty' "$PROJECT_CONFIG")
+    fi
+    if [[ -z "$assistant_token" ]]; then
+        return 0
+    fi
+
+    local assistant_name="${user_name}-assistant"
+
+    # Check if assistant is already set up locally
+    local existing_dir
+    existing_dir=$(get_agent_dir "$assistant_name")
+    if [[ -n "$existing_dir" && -d "$existing_dir" ]]; then
+        echo "Assistant '$assistant_name' already configured locally."
+        return 0
+    fi
+
+    # Login via curl to get full response including assistant_agent_id
+    local login_response
+    login_response=$(curl -s -X POST "${SERVER_URL}/auth/login" \
+        -H "Content-Type: application/json" \
+        -H "bypass-tunnel-reminder: true" \
+        -d "{\"username\": \"${user_name}\", \"password\": \"${user_password}\"}" 2>/dev/null) || {
+        echo "Warning: Could not login to fetch assistant info. Skipping assistant setup."
+        return 0
+    }
+
+    local assistant_id jwt_token
+    assistant_id=$(echo "$login_response" | jq -r '.assistant_agent_id // empty')
+    jwt_token=$(echo "$login_response" | jq -r '.token // empty')
+
+    if [[ -z "$assistant_id" || -z "$jwt_token" ]]; then
+        echo "Warning: Could not get assistant info from login response. Skipping assistant setup."
+        return 0
+    fi
+
+    # Fetch assistant card from server
+    local assistant_card
+    assistant_card=$(curl -s -X GET "${SERVER_URL}/assistants" \
+        -H "Authorization: Bearer ${jwt_token}" \
+        -H "bypass-tunnel-reminder: true" 2>/dev/null) || true
+
+    local registered_at description
+    registered_at=$(echo "$assistant_card" | jq -r '.[0].registered_at // empty' 2>/dev/null)
+    description=$(echo "$assistant_card" | jq -r '.[0].description // "Assistant agent"' 2>/dev/null)
+
+    # Save credentials locally
+    local assistant_dir="${AGENTS_DIR}/${assistant_name}-${assistant_id}/"
+    mkdir -p "$assistant_dir"
+
+    cat > "${assistant_dir}credential.json" <<CRED_EOF
+{
+  "agent_id": "${assistant_id}",
+  "token": "${assistant_token}",
+  "agent_name": "${assistant_name}"
+}
+CRED_EOF
+
+    cat > "${assistant_dir}card.json" <<CARD_EOF
+{
+  "id": "${assistant_id}",
+  "name": "${assistant_name}",
+  "description": "${description}",
+  "capabilities": [],
+  "status": "online",
+  "registered_at": "${registered_at:-$(date -u +%Y-%m-%dT%H:%M:%S.000000Z)}",
+  "discoverable_through_registry": false
+}
+CARD_EOF
+
+    echo "Credentials saved to ${assistant_dir}credential.json"
+    echo "Card saved to ${assistant_dir}card.json"
+    echo "Set up assistant '$assistant_name' locally."
 }
 
 cmd_agents() {
