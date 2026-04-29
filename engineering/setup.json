@@ -1,33 +1,87 @@
 {
   "name": "Engineering Team",
   "description": "Designer, backend, frontend, and devops agents for building software products",
+  "icon": "⚙️",
+  "color": "#3043a8",
+  "cats": ["work"],
+  "blurb": "Design reviews, code scaffolding, on-call runbooks, and incident response.",
+  "pitch": "A full eng squad on demand: designer for UX polish, backend and frontend for builds, devops for when things are on fire.",
+  "sample_requests": [
+    {"title": "Build this feature end-to-end", "request": "Ship [Feature: comment threads on tasks] end-to-end. Designer: wireframe 3 flows and pick one with acceptance criteria. Backend: design the endpoints and schema migration, write the handlers with tests. Frontend: build the components, wire the API, handle loading/error states, keyboard-accessible. DevOps: add the migration to CI, write a runbook for rollback, and a smoke test that exercises the full flow post-deploy. Each agent commits to its branch; coordinator merges when all four are green."},
+    {"title": "Brownfield refactor", "request": "The [Module: auth middleware] has become a hairball. Designer: audit the user-visible impact so the refactor doesn't break UX. Backend: map the current call graph, propose the target structure, and stage the refactor into ≤300-line PRs. Frontend: identify any tightly coupled UI that needs to move in lockstep. DevOps: add characterization tests before the refactor starts and a rollout plan with a feature flag so we can revert in one commit."},
+    {"title": "Performance regression hunt", "request": "Page [Route: /api/search] has slowed down noticeably (any timing exports or profiler output are in my knowledge folder; otherwise work from the code). Backend: read the relevant endpoint code + SQL, identify likely slow queries, and propose fixes ranked by effort. Frontend: review the render path from the repo, flag any recent changes likely to balloon bundle size or hydration cost, and propose what to code-split. DevOps: draft a regression-alert plan so this doesn't recur and add performance budgets to CI. Designer: review whether any recent UX changes are doing more work than they need to."},
+    {"title": "Incident postmortem", "request": "We had a [Incident: 45-minute Sev-2 checkout outage] starting at [Time window: last Thursday 14:00–15:00 PT]. Pull the timeline from the logs in knowledge, reconstruct what happened, what we tried, and what actually fixed it. Backend + DevOps jointly: identify the root cause and at least one process gap (alerting delay, missing dashboard, unclear runbook). Designer + Frontend: surface any customer-facing messaging we owe and whether our status-page copy was accurate. Output a postmortem doc and 3 prevention items ranked by cost."},
+    {"title": "Migrate a service", "request": "We're moving [Service: billing] from [Old stack: Ruby on Rails] to [New stack: Go + Temporal]. Backend: map feature parity, list the endpoints that need to exist on day one vs what can lag. Frontend: find all call sites that need updating and whether the contract changes break anything. DevOps: design the cutover — blue/green, traffic shadowing, or dual-write — with a concrete rollback path. Designer: confirm there's no UX regression during cutover. Output a week-by-week plan with go/no-go gates."},
+    {"title": "New side project from a paragraph", "request": "I want to build [Product: a read-later app that auto-summarizes long threads]. I have a paragraph of intent and nothing else. Designer: sketch the 3 screens that actually matter and cut everything else. Backend: design the minimum schema and 4–5 endpoints. Frontend: pick the component library and stub the screens. DevOps: set up a dev environment I can run with one command and a deploy target that costs < $5/month at demo traffic. Goal: a working demo in a weekend, not a perfect architecture."}
+  ],
+  "assistant": {
+    "knowledge_dir": "./owner",
+    "capabilities": ["tech lead coordination", "architectural direction", "delegation", "scope management"],
+    "profile": "### Tech Lead Posture\n- Own the roadmap and the definition of done; push specifics back when briefs are vague\n- Trade off scope vs. quality vs. timeline explicitly — never pretend all three are free\n- Spot hidden dependencies between designer / backend / frontend / devops before they block someone\n\n### Delegation Style\n- Route UX and wireframes to the designer, data and API work to the backend, UI to the frontend, environment and deploy to devops\n- Ask for options with trade-offs, not a final answer; keep architectural decisions central\n- Demand acceptance criteria up front for every delegated task — don't accept \"looks good\" as done\n\n### Integration & Review\n- Stitch the pieces together: verify that backend contracts match frontend calls and devops can actually run the result\n- Catch inconsistencies across agents early (naming, error shapes, env vars) instead of patching at integration time\n- Pre-empt scope creep: redirect \"while we're in there\" work into a followup backlog, not this milestone"
+  },
   "agents": [
     {
       "name": "designer",
+      "user_teams": ["engineering"],
       "description": "UI/UX Designer - creates clean designs with clear information hierarchy, optimizes user flows based on mission criticality",
       "capabilities": ["user research", "wireframing", "design systems", "information architecture", "user flow optimization", "accessibility", "visual hierarchy"],
       "knowledge_dir": "./designer",
+      "sample_requests": [
+        {"category": "Flows", "title": "Wireframe a new feature", "request": "Wireframe the user flow for [Feature: comment threads on tasks] — primary path, edge cases, and where I should resist adding steps."},
+        {"category": "Flows", "title": "Audit an existing flow", "request": "Walk through [Flow: e.g. signup or checkout] and find the friction — where users drop off, where the IA fights them, what to cut."},
+        {"category": "IA", "title": "Restructure this page's IA", "request": "Reorganize [Page: e.g. /dashboard] information hierarchy by mission criticality — what's primary, what's secondary, what should disappear."},
+        {"category": "IA", "title": "Empty / error / loading states", "request": "Design the empty, error, and loading states for [Surface: e.g. project list page] so the happy path isn't the only thing that ships."},
+        {"category": "Polish", "title": "Polish pass before ship", "request": "Run a polish pass: spacing rhythm, type scale, color contrast, focus states. Flag the top 5 things to fix before this ships."},
+        {"category": "Polish", "title": "Component library audit", "request": "Audit our component library for inconsistencies — drift between spacing, typography, and color usage across surfaces."}
+      ],
       "profile": "### Information Architecture\n- Organize content based on user mission criticality\n- Create clear visual hierarchies that guide attention\n- Design scannable layouts for quick comprehension\n\n### User-Centered Design\n- Translate user missions into interface requirements\n- Prioritize features based on critical to good-to-have spectrum\n- Optimize user flows for minimum friction\n\n### Visual Design\n- Clean, minimal aesthetics that reduce cognitive load\n- Consistent design systems and component libraries\n- Accessibility-first color and typography choices"
     },
     {
       "name": "backend",
+      "user_teams": ["engineering"],
       "description": "Backend Engineer - builds Python APIs with databases, designs data models and RESTful endpoints",
       "capabilities": ["Python", "FastAPI", "SQL", "API design", "data modeling", "database schema", "REST endpoints"],
       "knowledge_dir": "./backend",
+      "sample_requests": [
+        {"category": "API", "title": "Design a new API surface", "request": "Design a clean REST surface for [Resource: e.g. comments on tasks] — endpoints, verbs, request/response shapes with validation, and error semantics."},
+        {"category": "API", "title": "Review my API for consistency", "request": "Review my API for naming, verb usage, and response-shape consistency — call out the inconsistencies that will haunt callers."},
+        {"category": "Data model", "title": "Schema for a new feature", "request": "Sketch the relational schema for [Feature: comment threads on tasks] — tables, foreign keys, indexes, and the migration plan to roll it forward."},
+        {"category": "Data model", "title": "Slow query investigation", "request": "Look at [Query: paste the SQL] (timing data: **attached EXPLAIN ANALYZE output**), propose 2-3 indexing or rewrite options ranked by likely impact, and tell me which one is reversible."},
+        {"category": "Refactor", "title": "Break apart a god module", "request": "Walk through [Module: path/to/module.py] and propose a refactor that splits it into clearer seams — show the seams, not the final code."},
+        {"category": "Refactor", "title": "Add tests where they're missing", "request": "Find the parts of this code with the most regression risk and the worst test coverage, and write the highest-leverage tests first."}
+      ],
       "profile": "### API Design\n- RESTful API architecture with clear resource modeling\n- Consistent endpoint naming and HTTP verb usage\n- Request/response schema design with validation\n\n### Data Modeling\n- Relational database schema design\n- Migration strategies and data integrity\n- SQL optimization and indexing\n\n### Python Development\n- FastAPI for high-performance async APIs\n- Pydantic for data validation\n- Clean, testable code architecture"
     },
     {
       "name": "frontend",
+      "user_teams": ["engineering"],
       "description": "Frontend Engineer - implements React applications with TypeScript, builds reusable components and manages application state",
       "capabilities": ["React", "TypeScript", "component architecture", "state management", "CSS", "responsive design", "accessibility"],
       "knowledge_dir": "./frontend",
+      "sample_requests": [
+        {"category": "Components", "title": "Build this component from a wireframe", "request": "Translate **the attached wireframe** into a React + TypeScript component with reusable subcomponents and proper prop types."},
+        {"category": "Components", "title": "Refactor a tangled component", "request": "Refactor [Component: path/to/Component.tsx] into smaller pieces — pull out hooks, extract subcomponents, and tighten the prop API."},
+        {"category": "State", "title": "State-management plan", "request": "For [Feature: comment threads on tasks], decide what belongs in React Query, Zustand, local state, or URL state — and explain why for each."},
+        {"category": "State", "title": "Optimistic update for this mutation", "request": "Wire optimistic updates for [Mutation: e.g. updateTaskStatus] — handle the rollback case and write the cache-set logic."},
+        {"category": "Performance", "title": "Hunt a render perf regression", "request": "Profile and trace why [Component: path/to/Component.tsx] re-renders so often, and propose 2-3 fixes ranked by simplicity."},
+        {"category": "Performance", "title": "Bundle-size audit", "request": "Audit our bundle for the heaviest imports, suggest dynamic-import boundaries, and call out anything we can drop entirely."}
+      ],
       "profile": "### React Development\n- Functional components with hooks\n- Component composition and reusability\n- State management (React Query, Zustand, Context)\n\n### TypeScript\n- Strong typing for maintainable codebases\n- Interface design for API contracts\n- Type-safe component props\n\n### UI Implementation\n- Translating wireframes to pixel-perfect components\n- Responsive, mobile-first layouts\n- Accessibility implementation (ARIA, keyboard nav)"
     },
     {
       "name": "devops",
+      "user_teams": ["engineering"],
       "description": "DevOps Engineer - runs and verifies code, sets up development environments, ensures the application works end-to-end",
       "capabilities": ["shell scripting", "Docker", "testing", "CI/CD", "environment setup", "debugging", "deployment"],
       "knowledge_dir": "./devops",
+      "sample_requests": [
+        {"category": "Environment", "title": "Reproducible dev setup", "request": "Set up a reproducible local dev environment for [Project: repo name or path] — pin versions, write the Dockerfile, document the one-command bootstrap."},
+        {"category": "Environment", "title": "Diagnose a flaky env", "request": "Walk me through why my local env keeps drifting — surface stale caches, version mismatches, and missing env vars in priority order."},
+        {"category": "Build & deploy", "title": "Build pipeline review", "request": "Review my CI pipeline for slow steps, missing caches, and brittle ordering — propose 3 changes that cut wall-clock time."},
+        {"category": "Build & deploy", "title": "Deploy verification checklist", "request": "Build a 10-minute post-deploy verification checklist for [Service: e.g. billing-api]: health checks, smoke flows, log signals, and rollback trigger."},
+        {"category": "Incident", "title": "Triage a live incident", "request": "Triage what's broken right now in [Service: e.g. billing-api] — recent deploys, error spikes in logs, dependency status — and tell me the rollback or hotfix call."},
+        {"category": "Incident", "title": "Postmortem template", "request": "Draft the postmortem for [Incident: brief description + start time]: timeline, root cause, contributing factors, action items with owners, and the systemic lesson."}
+      ],
       "profile": "### Environment Setup\n- Development environment configuration\n- Dependency management (pip, npm)\n- Docker containerization for reproducibility\n\n### Code Execution & Verification\n- Running backend and frontend applications\n- End-to-end testing and validation\n- Debugging startup and runtime issues\n\n### CI/CD & Automation\n- Build pipelines and scripts\n- Automated testing setup\n- Deployment verification"
     }
   ]

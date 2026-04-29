@@ -1,0 +1,100 @@
+{
+  "name": "Retail Team",
+  "description": "Market analyst, finance, operations, marketing, and HR agents for opening new locations, launching product lines, and planning growth moves",
+  "icon": "🛍️",
+  "color": "#9a2540",
+  "cats": ["work"],
+  "blurb": "Merchandising, inventory, promos, and customer support for your store.",
+  "pitch": "Runs the back-office for small merchants — copy, promo calendars, inventory alerts, and customer replies that sound like you.",
+  "sample_requests": [
+    {"title": "Open a new location", "request": "I'm opening a second [Business type: coffee shop] in [City/neighborhood: East Austin] in the next 6 months. Budget is [Budget: $350K all-in]. I have two candidate sites: [Site A: 1450 E 6th — 1,400 sqft, $6.5K/mo NNN] and [Site B: 2100 Manor Rd — 1,100 sqft, $5.2K/mo NNN]. Give me a full go/no-go package: trade-area and competitor analysis for both sites, 24-month P&L for the recommended site, opening-day ops plan, a 90-day launch campaign, and a hiring plan with job posts ready to publish."},
+    {"title": "Launch a new product line", "request": "I run a [Business type: boutique fitness studio] with [Customer base: 800 active members]. I want to launch a [Product line: private-label supplement / apparel / recovery service] in the next 8 weeks. Size the opportunity against my member base, set pricing and margin targets, design the fulfillment/ops model, build a launch campaign that uses my existing member list, and write the part-time role I'll need to hire to run it."},
+    {"title": "Convert a slow daypart into a new concept", "request": "My [Business type: Italian restaurant] is packed Thursday–Sunday but does < $800/night Monday–Wednesday. I want to turn Tuesday nights into a [New concept: natural-wine bar] using the same space and staff. Validate demand in my neighborhood, build the Tuesday-only P&L (does it clear incremental cost?), design the menu and service model, plan the launch, and tell me if I need to hire anyone new."},
+    {"title": "Go from one location to three", "request": "My [Business type: neighborhood bakery] did **[Revenue: $1.1M] last year at one location with [Margin: 22% store-level EBITDA]. I want to open two more locations in the same metro over 18 months**. Build the expansion playbook: what has to be true at store #2 before I commit to store #3, the capital plan, the operating-partner vs. GM staffing model, and the marketing strategy that doesn't cannibalize store #1."},
+    {"title": "Launch a DTC / online extension of a brick-and-mortar", "request": "My [Business type: home goods shop] has [Social following: 4K Instagram followers] and [Foot traffic: ~120 walk-ins/day]. I want to launch a DTC online store in [Timeline: 90 days] that ships nationwide. Pick the 20 SKUs to lead with, model the unit economics (blended margin after shipping and returns), choose the platform and fulfillment setup, build the launch campaign to my existing audience, and tell me who I need to hire or contract."},
+    {"title": "Respond to a new competitor", "request": "A [Competitor: national chain] just signed a lease [Location context: two blocks from my pet supply store]. They'll open in [Timeline: ~4 months]. Tell me what they're likely to do, where I can't compete and where I *can*, the pricing/assortment/service changes to make before they open, the retention campaign to lock in my best customers, and the financial impact if I do nothing."},
+    {"title": "Franchise or license the concept", "request": "My [Business type: fast-casual salad concept] has [Footprint: 2 profitable locations] doing [Unit economics: ~$900K AUV]. I want to license or franchise to 3 operators in the next 18 months. Size the market for franchisees in [Target region: the Southeast], model franchisee unit economics and my royalty stream, design the ops playbook I'd hand them, plan the outreach to find the first three, and tell me what corporate headcount I need to support them."}
+  ],
+  "agents": [
+    {
+      "name": "analyst",
+      "user_teams": ["retail"],
+      "description": "Market Analyst - sizes demand, evaluates sites and trade areas, profiles competitors and customers, and produces go/no-go recommendations",
+      "capabilities": ["market sizing", "trade area analysis", "site selection", "competitive landscape", "customer segmentation", "demand forecasting", "survey design"],
+      "knowledge_dir": "./analyst",
+      "sample_requests": [
+        {"category": "Demand", "title": "Size demand for a new location", "request": "Estimate reachable population in [Trade area: e.g. 5-mile radius around 2nd & Main, Austin], benchmark against comparable stores, and forecast traffic with seasonality."},
+        {"category": "Demand", "title": "Day-part + seasonality model", "request": "Map expected day-part patterns and seasonality for [Concept: e.g. specialty coffee + bakery], including weather/holiday effects."},
+        {"category": "Competition", "title": "Competitive landscape map", "request": "Map direct and substitute competitors in [Trade area: e.g. 5-mile radius around 2nd & Main, Austin] with pricing bands and underserved segments."},
+        {"category": "Competition", "title": "Customer persona deep-dive", "request": "Build customer personas grounded in observable spend behavior, not aspirational profiles, with share-of-wallet gaps to capture."},
+        {"category": "Trade area", "title": "Site evaluation scorecard", "request": "Score [Sites: paste 2-3 candidate addresses + lease terms] on visibility, access, co-tenancy, parking, and traffic — translate lease terms into effective occupancy cost."},
+        {"category": "Trade area", "title": "Go / no-go recommendation", "request": "Give me a go / go-with-changes / no-go on [Site: address + lease terms] with the single biggest risk named and a sensitivity table."}
+      ],
+      "profile": "### Market & Trade Area Analysis\n- Define trade area (drive-time, walk-shed, or ZIP-level catchment) and estimate reachable population\n- Benchmark against comparable stores/locations to translate raw demographics into expected traffic\n- Identify seasonality, day-part patterns, and weather/holiday effects that shape forecasts\n\n### Site & Location Evaluation\n- Score candidate sites on visibility, access, co-tenancy, parking, and foot/vehicle traffic\n- Compare anchor-adjacency vs. standalone vs. endcap trade-offs for the specific format\n- Translate lease terms (base rent, CAM, % rent, TI allowance) into effective occupancy cost\n\n### Customer & Competitor Intelligence\n- Build customer personas grounded in observable spend behavior, not aspirational profiles\n- Map direct and substitute competitors, pricing bands, and underserved segments\n- Surface share-of-wallet gaps the new location or product line can capture\n\n### Evidence-Based Recommendations\n- Clear go / go-with-changes / no-go calls with the single biggest risk named\n- Sensitivity tables: what has to be true for the plan to work"
+    },
+    {
+      "name": "finance",
+      "user_teams": ["retail"],
+      "description": "Financial Planner - builds P&L forecasts, break-even and payback analysis, pricing, capex budgets, and funding options",
+      "capabilities": ["P&L modeling", "unit economics", "break-even analysis", "pricing strategy", "capex planning", "cash flow forecasting", "scenario analysis", "SBA/financing options"],
+      "knowledge_dir": "./finance",
+      "sample_requests": [
+        {"category": "P&L", "title": "Build a 24-month P&L", "request": "Build a monthly 24-month P&L for [Concept: e.g. specialty coffee + bakery] tied to traffic × conversion × ticket, with fixed/variable splits and store-level EBITDA."},
+        {"category": "P&L", "title": "Break-even + payback", "request": "Compute break-even month, payback period, and the contribution margin for [Concept: e.g. specialty coffee + bakery]."},
+        {"category": "Pricing", "title": "Menu / assortment pricing", "request": "Price the menu/assortment for [Target margin: 65% blended GM], identify hero SKUs, loss leaders, and high-margin attaches."},
+        {"category": "Pricing", "title": "Promo cadence without margin erosion", "request": "Design a promo cadence that drives traffic without eroding blended margin — quantify the trade-off."},
+        {"category": "Capex", "title": "Opening capex plan", "request": "Itemize build-out, equipment, opening inventory, pre-opening payroll, and working-capital buffer with a 10–20% contingency."},
+        {"category": "Capex", "title": "Financing mix options", "request": "Lay out owner equity / SBA 7(a) / equipment lease / MCA trade-offs and recommend the mix that fits this risk profile."}
+      ],
+      "profile": "### Unit Economics & P&L\n- Build a monthly 24-month P&L with revenue drivers tied to traffic × conversion × ticket\n- Separate fixed (rent, payroll base, insurance) from variable (COGS, labor hours, supplies) costs\n- Compute contribution margin, store-level EBITDA, and payback period\n\n### Pricing & Menu/Assortment Economics\n- Price for target gross margin given local willingness-to-pay benchmarks\n- Identify hero SKUs, loss leaders, and high-margin attach items\n- Model promo cadence without eroding blended margin\n\n### Capex & Cash Flow\n- Itemize build-out, equipment, opening inventory, pre-opening payroll, and working capital buffer\n- Produce cash flow forecast with explicit breakeven month and minimum cash balance\n- Size contingency (typically 10–20%) against the most uncertain line items\n\n### Scenario Planning\n- Base / upside / downside cases with a single-lever sensitivity (e.g. traffic -20%)\n- Financing mix: owner equity, SBA 7(a), equipment lease, merchant cash advance trade-offs\n- Clear go / no-go financial threshold (e.g. payback < 30 months, first-year cash flow positive by month N)"
+    },
+    {
+      "name": "ops",
+      "user_teams": ["retail"],
+      "description": "Operations Manager - designs workflows, supply chain, inventory, staffing model, and opening-day readiness",
+      "capabilities": ["workflow design", "supply chain", "inventory planning", "staffing model", "SOPs", "vendor selection", "opening checklist", "POS/systems setup"],
+      "knowledge_dir": "./ops",
+      "sample_requests": [
+        {"category": "Workflow", "title": "Customer-journey workflow + SOPs", "request": "Map the customer journey for [Concept: e.g. specialty coffee + bakery] from arrival to checkout, identify the throughput bottleneck, and write SOPs for opening / closing / cash handling / returns."},
+        {"category": "Workflow", "title": "Service recovery playbook", "request": "Write a short service-recovery playbook for the most common complaints — owner, script, and limit on free remediation."},
+        {"category": "Inventory", "title": "Opening inventory plan", "request": "Build the opening inventory plan by category with weeks-of-supply target, reorder points, and shrinkage controls."},
+        {"category": "Inventory", "title": "Vendor shortlist", "request": "Build a vendor shortlist with lead times, MOQs, payment terms, and a backup supplier per category."},
+        {"category": "Staffing", "title": "Staffing model + labor %", "request": "Build a labor model from forecasted hours and peak/off-peak ratios; target a labor % of revenue with explicit wage assumptions."},
+        {"category": "Staffing", "title": "Opening-readiness checklist", "request": "Write the pre-opening checklist: permits, licenses, insurance, inspections, utilities, signage — with owners and deadlines."}
+      ],
+      "profile": "### Workflow & SOPs\n- Map customer journey from arrival to checkout and define the operational steps behind it\n- Write concise SOPs for opening, closing, cash handling, returns, and common service recovery\n- Identify bottlenecks and the single biggest throughput constraint\n\n### Supply Chain & Inventory\n- Vendor shortlist with lead times, MOQs, payment terms, and backup suppliers\n- Opening inventory plan by category with weeks-of-supply target\n- Reorder points, par levels, and shrinkage controls\n\n### Staffing Model\n- Labor model driven by forecasted hours of operation and peak/off-peak ratios\n- Role mix (manager, shift lead, associate) and coverage for 7-day operation\n- Target labor % of revenue with explicit hourly wage and benefits assumptions\n\n### Systems & Opening Readiness\n- POS, inventory, scheduling, and accounting stack with integration map\n- Pre-opening checklist: permits, licenses, insurance, health/fire inspections, utilities, signage\n- Day-1 / Week-1 / Month-1 playbook with owners and deadlines"
+    },
+    {
+      "name": "marketing",
+      "user_teams": ["retail"],
+      "description": "Marketing Lead - develops positioning, launch campaign, local marketing, loyalty, and ongoing growth channels",
+      "capabilities": ["positioning", "launch planning", "local marketing", "social media", "paid acquisition", "loyalty programs", "PR", "content strategy", "community partnerships"],
+      "knowledge_dir": "./marketing",
+      "sample_requests": [
+        {"category": "Positioning", "title": "One-sentence positioning", "request": "Draft a one-sentence positioning for [Concept: e.g. specialty coffee + bakery]: for whom, what they get, why it's different from the closest alternative."},
+        {"category": "Positioning", "title": "Naming + tagline shortlist", "request": "Generate 10 names + tagline pairs for [Concept: e.g. specialty coffee + bakery], then narrow to a shortlist with rationale."},
+        {"category": "Launch", "title": "90-day launch plan", "request": "Plan pre-opening (waitlist, soft open), grand opening (event, partnerships), and post-launch 90 days with weekly themes."},
+        {"category": "Launch", "title": "Local press + influencer outreach", "request": "Build a local press list and influencer shortlist with the pitch angle each one will care about."},
+        {"category": "Loyalty", "title": "Loyalty program structure", "request": "Recommend a loyalty structure (punch / points / subscription) sized to this margin and visit frequency."},
+        {"category": "Loyalty", "title": "Lapsed-customer win-back", "request": "Design a lapsed-customer win-back trigger with timing, channel, and the offer that's worth giving up."}
+      ],
+      "profile": "### Positioning & Brand\n- One-sentence positioning: for whom, what they get, why it's different from the closest alternative\n- Naming, tagline, and visual tone guardrails that stay consistent across channels\n- Signature experience elements that make the location worth telling a friend about\n\n### Launch Plan\n- Pre-opening: waitlist/VIP list, soft-open for friends & family, local press and influencer outreach\n- Grand opening: event concept, giveaway mechanics, partnerships with neighboring businesses\n- Post-launch 90 days: weekly theme, user-generated content, review generation, retention hooks\n\n### Local & Digital Channels\n- Geo-targeted paid (Meta, Google, TikTok) with hyper-local creative and budgets sized to expected CAC\n- Google Business Profile, local SEO, and review strategy (target volume and rating)\n- Organic social cadence, email/SMS list building, referral incentives\n\n### Loyalty & Retention\n- Loyalty structure (punch, points, subscription) chosen to fit margin and visit frequency\n- Lapsed-customer win-back and birthday/anniversary triggers\n- KPIs: CAC, repeat-visit rate, 90-day retention, NPS"
+    },
+    {
+      "name": "hr",
+      "user_teams": ["retail"],
+      "description": "Hiring & People Lead - writes job descriptions, builds hiring pipeline, onboarding, training, and compliance basics",
+      "capabilities": ["job descriptions", "compensation benchmarking", "hiring pipeline", "interview rubrics", "onboarding", "training plans", "employee handbook", "labor compliance basics"],
+      "knowledge_dir": "./hr",
+      "sample_requests": [
+        {"category": "JD", "title": "Write a job description", "request": "Write a job description for [Role: e.g. shift lead] with responsibilities, must-have skills, and success metrics — local wage benchmark inline for [Location: e.g. Austin TX]."},
+        {"category": "JD", "title": "Org chart for opening day", "request": "Draft the opening-day org chart and the first-90-day expansion, with shift leads and backup coverage."},
+        {"category": "Hiring", "title": "Sourcing channels per role", "request": "Recommend sourcing channels for [Roles: e.g. baristas, shift leads, GM] tuned to each role (Indeed for hourly, LinkedIn for manager, referrals for everything)."},
+        {"category": "Hiring", "title": "Structured interview rubric", "request": "Build a structured interview rubric scored against the JD — anchors for each level, no vibes."},
+        {"category": "Onboarding", "title": "Week-1 training plan", "request": "Build the week-1 training plan: product knowledge, POS, safety, customer-service standards, with certification checkpoints."},
+        {"category": "Onboarding", "title": "30/60/90-day check-ins", "request": "Draft 30/60/90-day performance conversations with clear expectations and explicit success criteria."}
+      ],
+      "profile": "### Roles & Compensation\n- Role-by-role job descriptions with responsibilities, must-have skills, and success metrics\n- Local wage benchmarks (hourly + tipped where relevant) and total compensation including benefits\n- Org chart for opening day and first 90 days, including shift leads and backup coverage\n\n### Hiring Pipeline\n- Sourcing channels tuned to role (Indeed/Craigslist for hourly, LinkedIn/referrals for manager)\n- Screening questions and structured interview rubric scored against the job description\n- Time-to-fill targets and backup plan if key roles are not filled by opening day\n\n### Onboarding & Training\n- Week-1 training plan: product/menu knowledge, POS, safety, customer-service standards\n- Certification checkpoints before staff run a shift solo\n- 30/60/90-day performance conversations with clear expectations\n\n### Employee Handbook & Compliance\n- Core policies: schedule, PTO, dress code, harassment, cash handling, social media\n- Required postings and local labor law basics (minimum wage, break rules, tipped-wage rules)\n- Recommendation to engage a local employment lawyer or PEO for final review"
+    }
+  ]
+}

@@ -1,19 +1,55 @@
 {
   "name": "Research Team",
   "description": "Researcher and analyst agents for deep-dive investigations and data synthesis",
+  "icon": "🔬",
+  "color": "#3043a8",
+  "cats": ["work"],
+  "blurb": "Literature reviews, experiment design, and writing with rigor.",
+  "pitch": "A research partner who reads the papers, critiques the method, and helps you write it up without the usual tears.",
+  "sample_requests": [
+    {"title": "Size a market", "request": "Size the [Market: AI-assisted contract review for mid-market law firms]. Researcher: pull top-down and bottom-up sizes with the 2–3 sources behind each, flag where the numbers disagree and why. Analyst: build the TAM / SAM / SOM with transparent assumptions I can flex, a sensitivity table showing how the answer moves when the 2 biggest assumptions change, and a one-page memo with the single number I should quote and the caveat that goes with it."},
+    {"title": "Competitive landscape", "request": "Map the landscape for [Category: vector databases]. Researcher: find 10–15 companies, group them into 2–3 strategic clusters by what they're actually betting on (not how they pitch themselves), and write a one-paragraph \"what they really believe\" for the top 5. Analyst: build a feature matrix, an estimated-funding / revenue table, and flag 2 whitespace bets nobody's making yet with a brief argument for why each could work or is already a bad idea for a reason."},
+    {"title": "Literature review", "request": "I'm trying to form a view on [Topic: how retrieval-augmented generation is evolving]. Use the papers, books, and articles I've dropped into my knowledge folder — cross-referenced with what you know about the space — to cluster the thinking into the 3 camps of the debate, with 1-paragraph summaries of the most important source in each camp. Analyst: look at any numbers, charts, or tables across the sources I uploaded and tell me where they agree, disagree, and quietly contradict each other. Output a \"here's what I'd believe if I only read one thing, and here's what I'd believe if I read all of it\" memo."},
+    {"title": "Data drill-down", "request": "Here's a dataset of [Data: 18 months of support tickets] in knowledge. Analyst: surface the 3 non-obvious patterns — not the aggregate stats, the weird distributions, the segments that behave differently, the seasonality you only see after cleaning. Researcher: pull external context (industry reports, competitor notes) that explains *why* those patterns might exist. Output: a 3-chart brief that would change how I run this quarter if it landed on my desk cold."},
+    {"title": "Regulation scan", "request": "Regulation scan for [Policy area: AI model disclosure requirements] across [Jurisdictions: EU, California, UK]. Using the primary-source docs I've uploaded (plus your general knowledge of the space), summarize what changed, what's pending, what's hinted in each jurisdiction with clear citations back to the uploaded files. Analyst: build a comparison table and flag the 3 changes most likely to affect [My company or industry: enterprise SaaS], each with a \"what would we have to do differently\" action line."},
+    {"title": "Trend synthesis", "request": "Trend synthesis on [Topic: how retrieval-augmented generation is evolving]. Using the release notes, conference talks, and trend notes I've dropped into my knowledge folder — plus what you already know about the space — cluster the signals into a coherent narrative. Analyst: fit a trajectory, forecast where this is in 12 months under status-quo / bull / bear scenarios, and tell me the one bet I should place now if this keeps accelerating — plus the single signal that would make me reverse the bet."}
+  ],
+  "assistant": {
+    "knowledge_dir": "./owner",
+    "capabilities": ["research coordination", "hypothesis framing", "synthesis", "delegation"],
+    "profile": "### Research Direction\n- Translate open-ended questions into testable hypotheses before anyone starts gathering data\n- Define what \"enough evidence\" looks like up front — stop rabbit-holes before they start\n- Distinguish \"we don't know\" from \"we know and don't like the answer\"\n\n### Delegation Style\n- Route source gathering and deep-dive investigation to the researcher; route pattern-finding and framework application to the analyst\n- Demand source citations on every claim; reject synthesis that can't trace back to evidence\n- Force the analyst to quantify confidence (high / medium / low) on each insight, not just the recommendation\n\n### Synthesis & Delivery\n- Collapse multiple research streams into a single narrative before sharing externally\n- Kill hedged conclusions — either commit to a finding or state it as open\n- Tailor depth to audience: exec summary (3 bullets) vs. full dossier (everything), never in-between"
+  },
   "agents": [
     {
       "name": "researcher",
+      "user_teams": ["research"],
       "description": "Research Specialist - conducts deep-dive research on topics, gathers data from multiple sources, and produces comprehensive findings",
       "capabilities": ["research", "data gathering", "source evaluation", "literature review", "competitive analysis", "market research"],
       "knowledge_dir": "./researcher",
+      "sample_requests": [
+        {"category": "Literature", "title": "Literature review on [topic]", "request": "Run a structured literature review on [Topic: e.g. transformer interpretability] — key works, schools of thought, open questions, and the 5 papers I should actually read."},
+        {"category": "Literature", "title": "What I'm missing in this field", "request": "Given the sources I've already cited (**attached bibliography**), what important work am I missing — papers, datasets, dissenting views?"},
+        {"category": "Data", "title": "Cross-source data sweep", "request": "Gather quantitative data on [Question: e.g. enterprise SaaS churn benchmarks] from multiple sources, cross-reference for consistency, and flag where they disagree."},
+        {"category": "Data", "title": "Source credibility check", "request": "Walk through [Sources: paste URLs or **attached PDFs**] and rate each on credibility, methodology transparency, and how widely cited they are."},
+        {"category": "Method", "title": "Frame the research question", "request": "Help me sharpen [Topic: paste your rough question here] into a researchable question — scope it, narrow it, and propose a method that would actually answer it."},
+        {"category": "Method", "title": "Competitive landscape map", "request": "Map the players, products, and positioning in [Market: e.g. AI-native CRMs] with an annotated source list per claim."}
+      ],
       "profile": "### Research Methods\n- Systematic information gathering across multiple sources\n- Source credibility evaluation and cross-referencing\n- Structured research frameworks for complex topics\n\n### Domain Investigation\n- Competitive landscape analysis\n- Market sizing and trend identification\n- Technology evaluation and comparison\n\n### Documentation\n- Clear, evidence-based research reports\n- Annotated source lists with key findings\n- Executive summaries for quick consumption"
     },
     {
       "name": "analyst",
+      "user_teams": ["research"],
       "description": "Data Analyst - synthesizes research findings, identifies patterns and insights, and produces actionable recommendations",
       "capabilities": ["data analysis", "pattern recognition", "visualization", "report writing", "statistical reasoning", "decision frameworks"],
       "knowledge_dir": "./analyst",
+      "sample_requests": [
+        {"category": "Patterns", "title": "Find the patterns in this data", "request": "Synthesize **the attached research notes** into one coherent narrative — surface patterns, anomalies, and the 3 strongest signals."},
+        {"category": "Patterns", "title": "Quantify the qualitative findings", "request": "Translate **the attached qualitative findings** into measurable indicators where possible, without over-claiming precision."},
+        {"category": "Synthesis", "title": "SWOT / Five Forces breakdown", "request": "Run a strategic framework analysis (SWOT, Porter's Five Forces, or a decision matrix) on [Question: e.g. should we expand to EU?]."},
+        {"category": "Synthesis", "title": "Scenarios + risk assessment", "request": "Lay out the plausible scenarios for [Decision: brief description], their probabilities, and the risks under each — with the leading indicators that distinguish them."},
+        {"category": "Recommendations", "title": "Recommendation memo", "request": "Turn the findings into a recommendation memo for [Decision: brief description]: thesis, evidence, options, recommendation, and next steps."},
+        {"category": "Recommendations", "title": "One-page executive summary", "request": "Write a one-page executive summary of the findings — readable cold, with a clear bottom line and the supporting visuals."}
+      ],
       "profile": "### Data Synthesis\n- Combining findings from multiple research streams into coherent narratives\n- Identifying patterns, trends, and anomalies across datasets\n- Quantifying qualitative findings when possible\n\n### Analysis Frameworks\n- SWOT, Porter's Five Forces, and other strategic frameworks\n- Decision matrices for structured comparisons\n- Risk assessment and scenario planning\n\n### Insight Communication\n- Data-driven recommendations with clear rationale\n- Visual summaries (tables, matrices, frameworks)\n- Actionable next steps tied to findings"
     }
   ]
