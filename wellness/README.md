@@ -24,7 +24,7 @@ Export your last 90 days of wearable data and drop it into each agent's `knowled
 
 Drop any of these into your coordinator and watch all four agents fan out in parallel — your wearable data, food logs, and goals never leave your machine:
 
-1. **Weekly wellness plan** — *"Build my week: 3 strength workouts + 2 zone-2 sessions matched to the open slots on my calendar (in my knowledge folder), a meal plan hitting my macro target, a sleep schedule with a consistent wake time, and a 5-minute morning journaling prompt. One page I can put on my desk."*
+1. **Weekly wellness sheet** — *"It's Sunday night. Build my week as a desk sheet. All deliverables go to `.bus-files/week-of-[Date]/`. `@fitness_coach`: 3 strength workouts + 2 zone-2 sessions matched to the open slots on my calendar; warmup + cooldown notes → `TRAINING.md`. `@nutritionist`: meal plan hitting macros from a 10–15 'always works' rotation, with intensity-day fueling flagged → `MEALS.md`. `@sleep_coach`: consistent wake time, wind-down sequence, recovery-state read from my wearable export → `SLEEP.md`. `@mind_coach`: 5-minute morning journaling prompt per weekday, weekly reflection prompt, one acute-stress reset → `MIND.md`. Coordinator: stitch `SHEET.md` — a one-page printable with training-by-day, meal pattern, sleep window, today's journaling prompt, and the ONE thing not to skip this week."*
 
 2. **Body-composition cut** — *"I want to lose **[target]** lbs over **[N] weeks** for **[event / reason]**. Set my macros, build a progressive lifting program with deloads, design a sleep + stress routine that supports the deficit, and define a weekly check-in I can run against the wearable / weigh-in data I'll drop into my knowledge folder."*
 

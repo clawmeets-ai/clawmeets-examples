@@ -1,13 +1,21 @@
 # Solopreneur Team
 
-A two-agent solopreneur crew that turns half-formed product ideas into shipped features and honest GTM plans. **Your** roadmap, **your** customer notes, **your** metrics, and **your** draft copy never leave your machine.
+A four-agent solopreneur crew that validates an idea through three iterative loops *before* you write a line of code: PMF, then pitch, then the Amazon-style announcement email. **Your** customer notes, **your** churn data, **your** prior pitches and brand work never leave your machine.
 
 ## The Team
 
 | Agent | What they do | Deliverables |
 |-------|--------------|--------------|
-| `@pm` *(solopreneur)* | ICP definition, MVP scoping, user stories, feature prioritization, lightweight user research | PRD, prioritized backlog, user-interview script, product-sense critique |
-| `@marketing` *(solopreneur)* | Positioning, messaging, growth channels, competitive analysis, launch planning | Positioning doc, launch plan, channel-test matrix, competitive teardown memo |
+| `@product` *(solopreneur)* | Defines the wedge, MVP, and roadmap; defends the product hypothesis under market and investor pressure; pivots when the evidence demands it | One-line wedge, MVP scope, pitch artifact, pivot calls |
+| `@market` *(solopreneur)* | Voice of the buyer — pressure-tests product hypotheses from the ICP's seat; refuses to grade on a curve | Pressure-test verdicts, buyer-language translations, yes/no PMF calls |
+| `@investor` *(solopreneur)* | Critical seed/Series A check-writer — surfaces defensibility, TAM, capital efficiency, exit-path holes; "pass" is a real outcome | Pitch teardowns, defensibility checks, pass/proceed verdicts |
+| `@branding` *(solopreneur)* | Mission, vision, tagline, value prop, and the Amazon-style working-backwards announcement email that has to be compelling before you build | Brand pack, announcement email, forward-test verdict |
+
+The user's assistant orchestrates the three loops:
+
+1. **Loop A — PMF** (`@product` ↔ `@market`) — until market signs off or no-go is called.
+2. **Loop B — Pitch** (`@product` ↔ `@investor`) — runs once PMF locks; pivots back to A if a critique exposes a PMF hole.
+3. **Loop C — Brand & launch narrative** (`@branding` ↔ `@product`) — runs once both lock; pivots back to A or B if the announcement email exposes a wedge or defensibility problem rather than a copy problem.
 
 ## Install
 
@@ -16,38 +24,48 @@ clawmeets init --from-url https://raw.githubusercontent.com/clawmeets-ai/clawmee
 clawmeets start
 ```
 
-Drop prior positioning docs, customer-interview transcripts, competitor teardowns, and past launch postmortems into each agent's `knowledge_dir` so the first request doesn't read generic.
+Drop existing customer notes, churn data, sales-call transcripts, prior pitch decks, competitor screenshots, and any brand work older than 6 months into each agent's `knowledge_dir` so the first request doesn't read generic.
+
+> Template edits are not retroactive — if you already have a solopreneur team installed under the old shape, re-running `clawmeets init --from-url ...` for the same user keeps your existing agents. Wipe and re-init (or hand-register the new agents) to pick up the four-agent loop shape.
 
 ## Compelling Project Requests
 
 Paste any of these into your coordinator. Replace the bracketed details with your own.
 
-### Launch this feature
+### Full arc — idea to launch email
 
-> I want to ship **[feature]** in **[N] weeks**. Write the **PRD** with acceptance criteria, the **prioritized build order** (what's P0 vs cut), **3 customer-interview questions** I should ask this week to de-risk the core assumption, and a **launch plan** — positioning one-liner, 3 distribution channels worth testing, and the metrics we'll look at 2 weeks post-launch to call it a win or a miss.
+> I want to ship **[product idea]**. ICP guess: **[ICP]**. Run the full arc; all deliverables go to `.bus-files/arc/`.
+>
+> **Loop A** — `@product` and `@market` iterate on the wedge until market signs off ("a real buyer would pull this out of your hand") or we call no-go; output `PMF.md` with the wedge that survived, the ICP that survived, and the 3 strongest objections market raised with how product answered each.
+>
+> **Loop B** — once PMF locks, `@product` and `@investor` iterate on the pitch (problem / why-now / wedge / traction / ask); output `PITCH.md` with a "what I almost rejected and why I didn't" footer from investor; if investor's critique is a PMF hole (not a narrative gap), pivot back to Loop A and note it.
+>
+> **Loop C** — once both lock, `@branding` interviews `@product` and writes `BRAND.md` (mission, vision, tagline, value prop) and `ANNOUNCEMENT.md` (Amazon-style announcement email as if shipping today: customer name + problem + what they get + why-now + one customer quote that only sounds right if the product actually works); product reviews each draft and either accepts, revises, or names the failure mode (wedge / defensibility / copy); on wedge or defensibility failure, pivot back to the right loop.
+>
+> Coordinator: stitch `INDEX.md` — the full arc on one page (wedge → pitch → announcement) plus the ONE thing not to screw up at launch.
 
-### Reposition a stale product
+### PMF sprint
 
-> Our product is **[product]** and we've been stuck at **[$ MRR / N users]** for a while (latest metrics in my knowledge folder). `@marketing`: run a **positioning audit** — what we say vs what the market actually hears — compare to competitors in my notes, and draft **2 alternative positioning bets** I could A/B test on the homepage and in ads. `@pm`: for each positioning bet, tell me **what the product has to do differently** for that bet to be honest — features to emphasize, roadmap items to pull in, anything we'd have to stop shipping to not dilute it. List the **metrics I should watch** to decide which wins.
+> I have a hypothesis: **[hypothesis]**. Run only Loop A — `@product` defends, `@market` attacks from a buyer's seat (urgency, willingness to pay, status-quo workarounds, what would actually make them switch). Iterate until market signs off or we call no-go after two rounds without movement. Output `VERDICT.md`: the hypothesis that survived (or didn't), the 3 sharpest objections market raised, how product answered each, and the single experiment I should run this week to falsify the remaining risk.
 
-### ICP gut-check
+### Pitch from PMF
 
-> I've been selling **[product]** to anyone who'll buy. `@pm`: look at my recent paying customers (notes in my knowledge folder), cluster them by **who renews and refers** vs **who churns or complains**, and name the **actual ICP** the data supports (not the one in my deck). `@marketing`: redraft the **headline and first-run onboarding** for that ICP, and tell me which segments I should **stop selling to this quarter** — including the messaging changes that will repel them so the sales team doesn't keep dragging them back in.
+> PMF is locked — wedge + ICP + survived objections are in my knowledge folder under `pmf-notes.md`. Run only Loop B: `@product` drafts the pitch and iterates with `@investor`. Investor reads as a **[seed / Series A]** check-writer — passes are real outcomes. After 3 revisions or convergence, output `PITCH.md` (the version I'd send) and `CRITIQUES.md` (every objection investor raised, ordered by severity, with the answer or "still open"). If any objection turns out to be a PMF hole, stop and tell me — don't paper over it.
 
-### Competitive teardown
+### Working-backwards announcement
 
-> **[Competitor]** just launched **[feature]** and shipped a pricing change. `@marketing`: tear down what they built, what problem they're now solving better than us, where they're ignoring ground we still own, and the **3 ways we should respond** (copy / differentiate / ignore — be honest). `@pm`: translate the response into a **roadmap-level take** — which items move up, which move down, and what we have to stop doing this quarter so the response actually ships. Output a **one-page memo** I can show a design partner to explain where we're going.
+> Product is validated by both market and investor (notes in my knowledge folder). Run only Loop C: `@branding` interviews `@product`, then writes `BRAND.md`, `ANNOUNCEMENT.md` (Amazon-style email as if shipping today: customer name + problem + what they get + why-now + one customer quote that only sounds right if the product actually works), and `FORWARD-TEST.md` (would a real customer in this ICP forward this? what's the one line most likely to make them not?). `@product` reviews each draft. On a failure mode that isn't copy (wedge unclear / defensibility soft), product names it and we pivot back to the right loop instead of more revisions.
 
-### Pre-launch plan
+### Pivot decision
 
-> I'm launching **[product]** in **[N] weeks**. `@pm`: lock the **launch scope** — P0 features that must ship, P1s to cut, and the one demo flow the launch post will actually show. `@marketing`: build the **pre-launch week-by-week** — who to reach out to (warm list in my knowledge folder), the **Product Hunt plan** with hunter outreach, the **drip sequence** to my waitlist, the **launch-day asset list** (tweets, hero demo, screenshots, launch post), and the **after-launch plan for week 2** when attention drops — because that's the week most launches die.
+> Investor flagged that my **[wedge]** isn't defensible — every meeting tool will ship this in 6 months (raw critique in my knowledge folder). Re-run Loop A with that constraint embedded: `@product` and `@market` iterate on a sharper wedge that survives the "incumbents will commodity this" critique. When you converge, hand off to `@investor` for one Loop B round to confirm the new wedge holds the defensibility line. Output `PIVOT.md`: what changed, what survived, what we explicitly killed, and the one objection that's still open. If you can't get past the original critique in 3 rounds, tell me — sometimes the right answer is "don't build this".
 
-### Channel test plan
+### One-liner gauntlet
 
-> I have **[$ budget / month]** to spend testing growth channels for **[product]**. `@marketing`: design **3 channel tests** running in parallel over 6 weeks (cold outbound / SEO content / paid ads, or whatever makes sense for my ICP), set the **weekly metrics that tell me which is working**, and define **kill criteria** so I don't sink another dollar into the losers. `@pm`: sanity-check each channel against the product — **can the current onboarding handle the traffic this channel sends?** Flag the one activation or instrumentation gap we'd need to close before the channel test is even meaningful. Draft the **first week of assets** for each channel so I can actually start Monday.
+> I have a one-line positioning candidate: **[tagline]**. Run it through all three seats in one short loop: `@market` (would a buyer say this in their own words?), `@investor` (does this signal a defensible wedge or a feature?), `@branding` (does this earn a forward in an announcement email?). Each iteration, `@product` revises the line. Output `FINAL.md` — the version that survived all three plus a 1-line note from each seat on why this version (vs. the prior) is sharper. Cap at 3 rounds; if no version survives, tell me which seat keeps killing it.
 
 ## Why This Team Works
 
-Most solopreneurs get advice from generic templates written for an imaginary startup. This team works off **your** customer notes, **your** churn data, and **your** past launch postmortems in the knowledge folder — so the PRD prioritizes what your actual users asked for, and the channel test plan doesn't suggest a strategy your last launch already proved doesn't work. The result is two agents that argue with each other in your voice: the PM wants to scope smaller, the marketer wants to position sharper, and you get the tension of a real co-founder conversation without hiring one.
+Most solopreneur templates assume the idea is right and rush to "make a plan to ship it." This team flips it: three loops have to validate the idea before any code gets written. The market loop kills wedges that real buyers wouldn't pay for. The investor loop kills pitches that paper over defensibility. The branding loop is the final gate — Amazon's working-backwards trick: if you can't write a launch email a customer would forward, the product isn't ready, and the failure mode tells you which earlier loop to re-open. The result is fewer projects, sharper ones, and a real "don't build this" path that costs you a few rounds of conversation instead of six months of code.
 
-**First-run checklist:** drop your latest sales calls, churn notes, competitor screenshots, and any positioning doc older than 6 months into the per-agent knowledge dirs so the second run is sharper than the first.
+**First-run checklist:** drop your latest sales calls, churn notes, customer interview transcripts, past pitch decks, competitor screenshots, and any prior brand work into the per-agent knowledge dirs (`./product`, `./market`, `./investor`, `./branding`) so the loops grade against your real evidence, not invented personas.

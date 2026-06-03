@@ -48,6 +48,79 @@ Paste any of these into your coordinator. Replace the bracketed details with you
 
 > I want to build **[product: e.g. a read-later app that auto-summarizes long threads]**. I have **a paragraph of intent** and nothing else. Designer: **sketch the 3 screens** that actually matter and cut everything else. Backend: design the **minimum schema and 4–5 endpoints**. Frontend: pick the **component library** and stub the screens. DevOps: set up a **dev environment I can run with one command** and a **deploy target that costs < $5/month** at demo traffic. Goal: a **working demo in a weekend**, not a perfect architecture.
 
+## Continuous audit loop (autonomous iteration on a deployed product)
+
+Once the team has shipped something, the same coordinator can run a
+recurring **micro-waterfall audit cycle** against the live deploy:
+critique what's there, score gaps by ROI, drop items that need a human,
+and dispatch the highest-value low-scope work each idle cycle.
+
+Three Markdown files in `shared-context/` drive it:
+
+| File | What it is | Authored by |
+|---|---|---|
+| [`PRD.md`](./PRD_TEMPLATE.md) | Product spec — Goal / Capability Tree / machine-checkable Definition of Done / Setup You Own | You (PM). Fill every REPLACEME |
+| [`AUDIT_PROCEDURE.md`](./AUDIT_PROCEDURE.md) | The seven-phase procedure (STATE → MICRO PLAN → EXECUTE → VERIFY pre-refactor → REFACTOR → VERIFY post-refactor → REFLECT). Soft budget: ~500 LOC of diff per cycle. Reused as-is across projects | Shipped here, upload as-is |
+| [`AUDIT_MSG.md`](./AUDIT_MSG.md) | The recurring driver (~5 lines pointing at the two files above). Same body kicks the project off and re-fires on cron | Shipped here, upload as-is |
+
+### Workflow
+
+```bash
+# 1. One-time per machine: install a verification skill on your assistant.
+clawmeets agent install-skill <username>-assistant playwright-browser
+clawmeets bootstrap browser
+
+# 2. Get a user JWT.
+TOKEN=$(clawmeets user login <username> <password>)
+
+# 3. Create the project (no kickoff message yet — the schedule sends it).
+clawmeets project create <project-name> <assistant-id> \
+  "Build per shared-context/PRD.md and shared-context/AUDIT_PROCEDURE.md." \
+  --git-url <repo> --team engineering --token "$TOKEN"
+# Note the returned project id as PROJECT_ID.
+
+# 4. Seed shared-context. The user-JWT branch on `file upload` records
+#    each upload as coming from the project coordinator.
+clawmeets file upload "$PROJECT_ID" shared-context \
+  templates/engineering/PRD_TEMPLATE.md --name PRD.md --token "$TOKEN"
+clawmeets file upload "$PROJECT_ID" shared-context \
+  templates/engineering/AUDIT_PROCEDURE.md --token "$TOKEN"
+clawmeets file upload "$PROJECT_ID" shared-context \
+  templates/engineering/AUDIT_MSG.md --token "$TOKEN"
+
+# 5. Fill every REPLACEME in PRD.md (deploy URL, verification skill,
+#    DoD specifics) then re-upload to overwrite.
+
+# 6. Schedule the recurring audit. --idle-only defers ticks while a
+#    milestone workroom is in flight; --start-at <now> makes the first
+#    tick the project kickoff (no separate kickoff message needed).
+clawmeets schedule create "$PROJECT_ID" user-communication \
+  --cron "0 * * * *" --idle-only \
+  --file templates/engineering/AUDIT_MSG.md \
+  --start-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --token "$TOKEN"
+```
+
+### What each cycle does
+
+- **Day 1, no codebase:** STATE → "deploy URL unreachable" → one
+  recovery workroom scaffolds the project. No MICRO PLAN this cycle.
+- **Day N, live deploy:** all seven phases run. The reply in
+  `user-communication` carries `=== STATE ===` … `=== REFLECT ===`
+  headers; `shared-context/AUDIT.md` accumulates per-cycle reflections.
+  Workrooms collect `pre-refactor-<step>.png` and
+  `post-refactor-<step>.png` screenshots so the refactor sandwich is
+  auditable end-to-end.
+- **REPLACEME still present:** the coordinator refuses to score gaps
+  and asks you to fill PRD.md. Skipped cycles do not consume turns.
+- **Idle gate:** while a workroom is running, the next cron tick is
+  deferred (logged as `Deferring scheduled message …: project … busy`);
+  `next_fire_at` advances without touching `last_fired_at`.
+
+The pattern is template-agnostic — point the same three-file split at
+any product. `templates/engineering/` ships the canonical procedure;
+your `PRD.md` is where the product-specific content lives.
+
 ## Why This Team Works
 
 The power here isn't any individual agent — it's what happens when four specialists argue in parallel off your real code. The designer flags a UX issue the backend engineer didn't realize they were baking in. The frontend engineer notices the API shape would force a cascade of prop drilling. The devops engineer catches that the migration plan assumes a blue/green path the current infra doesn't support. You get the tension of a real engineering team without context-switching between humans. Because the sandboxes are branch-isolated clones of your actual repo, the output isn't just a markdown file — it's a commit you can review.

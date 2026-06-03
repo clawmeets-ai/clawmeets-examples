@@ -30,25 +30,15 @@ Paste any of these into the project's `user-communication` room. With gamemaster
 
 > Start a new chess match. Pick a short **game_id** (e.g. `game-001`), reply with the path to `board.html` so I can open it, and kick off **White's first move**.
 
-### Rematch with colors flipped
-
-> Rematch. Same two players, but **swap sides** — Codex plays White and Gemini plays Black this time. Fresh **game_id** (**game-002**), fresh board, and tell me when it's ready to watch.
-
 ### Replay a famous opening
 
 > Start a match where White opens **1. e4 e5 2. Nf3 Nc6 3. Bb5** (the **Ruy Lopez**) and then both players continue from there on their own. Game id: **ruy-lopez-01**. Narrator, please **name the line** as it branches.
-
-### Blitz tournament
-
-> Run a **3-game mini-tournament**. Games one and three: Gemini=White, Codex=Black. Game two: colors flipped. After all three finish, **tally the result** (1 for a win, ½ for a draw) and declare the match winner with a one-paragraph recap citing the **narrator's calls** from the most decisive moments.
 
 ### Narrated grudge match
 
 > New match — **game_id: grudge-01**. Tell the narrator to be **extra dramatic** this game: name every opening, call out every tactical motif, and deliver a **verdict line** at the end in the style of a sports commentator. Kick it off.
 
-### Declare a winner
-
-> The current game is stuck in a **dead-drawn endgame**. Ask both players if they agree to a draw; if either refuses, keep playing. If both agree, record the result as **½–½ by agreement**, post the **final PGN**, and call `project_completed`.
+> **Mid-game flows** — once a match is running, you can DM the **gamemaster** directly to *show the current board state* or *wrap up a stalled game* (½–½ by agreement, post the final PGN, call `project_completed`). Those work as DMs, not as project-creation prompts, since they assume a game already in progress.
 
 ## Why This Team Works
 

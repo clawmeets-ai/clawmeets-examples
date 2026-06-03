@@ -22,13 +22,16 @@ You can combine templates by running `clawmeets init --from-url` multiple times 
 | [`memories`](./memories/README.md) | Curator, Memoirist, Relationship Mapper, Bookmaker | Memory Lane crew that curates your photos and turns them into books, cards, and stories |
 | [`household`](./household/README.md) | Meal Planner, Grocery Buyer, Family Scheduler, Home Keeper | Weekly life-management crew: meals, groceries, family calendar, and home upkeep |
 | [`wellness`](./wellness/README.md) | Nutritionist, Fitness Coach, Sleep Coach, Mind Coach | Health & wellness crew working from your goals, your wearable data, and the life you actually have time for |
-| [`finance`](./finance/README.md) | Budget Analyst, Investment Advisor, Tax Strategist, Bills Auditor | Personal CFO crew: monthly budget, investments, tax strategy, and recurring-bill audits |
-| [`solopreneur`](./solopreneur/README.md) | PM, Marketing | Product strategy, GTM, and launch planning |
+| [`finance`](./finance/README.md) | Budget Analyst, Investment Advisor, Tax Strategist | Personal CFO crew: monthly budget, investments, and tax strategy |
+| [`solopreneur`](./solopreneur/README.md) | Product, Market, Investor, Branding | Three iterative loops orchestrated by your assistant — PMF (product ↔ market), pitch (product ↔ investor), Amazon-style announcement email (branding ↔ product) — pivots back on wedge or defensibility failure |
 | [`engineering`](./engineering/README.md) | Designer, Backend, Frontend, DevOps | Full-stack software development team |
-| [`research`](./research/README.md) | Researcher, Analyst | Deep-dive research and data synthesis |
-| [`retail`](./retail/README.md) | Analyst, Finance, Ops, Marketing, HR | New locations, product-line launches, and growth moves for retail/restaurant/service owners |
-| [`sales`](./sales/README.md) | Account Researcher, Prospector, Closer, Proposal Writer | Personal sales desk: pipeline building, outbound, live-deal coaching, and proposals |
-| [`cos`](./cos/README.md) | Inbox Manager, Comms Writer, Board Prep, Meeting Prep | Founder's-office crew that reads your Gmail + Calendar locally: briefings, board prep, investor updates |
+| [`data`](./data/README.md) | DB Sync, Drive Sync, API Sync, Data Scientist | Business data team: sync DB / Drive / APIs into a local warehouse; one analytical agent explores, hypothesis-tests, builds features, answers business questions, and promotes mature analyses to scheduled derived views |
+| [`personal_data`](./personal_data/README.md) | Mailbox, Calendar, Photo, Data Organizer | Personal data warehouse over standard protocols (IMAP+SMTP, CalDAV, macOS Photos) — sync your real mail / calendar / photo metadata into a local warehouse on a schedule, AND address each agent conversationally for ad-hoc search/send/lookup. Provider-agnostic (Gmail app-password, iCloud, Fastmail, Outlook, ProtonMail Bridge, Nextcloud, Radicale, self-hosted). `@data_organizer` owns the derivation layer (rule design + cross-template handoff to finance / wellness) |
+| [`retail`](./retail/README.md) | Market Analyst, Finance, Marketing | New locations, product-line launches, and growth moves for retail/restaurant/service owners |
+| [`restaurant`](./restaurant/README.md) | Market Analyst, Menu Finance, Brand, Designer | Restaurant audit + redesign crew: crawl your site, harvest menu + prices, read PMF and pricing, sharpen positioning, ship the new visual identity and a working HTML mockup of the redesigned homepage + menu |
+| [`sales`](./sales/README.md) | Sales Dev, Inside Sales, Field Sales | Top-of-funnel pipeline crew: SDR builds the list and qualifies, Inside Sales runs cold email + digital follow-up cadence, Field Sales runs cold-visit pitch + in-person follow-up cadence |
+| [`customer_success`](./customer_success/README.md) | Account Specialist, Customer Support | Two-agent CS crew: specialist owns onboarding / health / expansion (honest renewal calls, no hopecasting); support owns the inbox (triage by customer-perceived severity, general inquiries, FAQs from clustered repeats) |
+| [`marketing`](./marketing/README.md) | Strategist, Creative, Instagram, SEO, YouTube, TikTok, Events, Direct Mail, Email, PR, Blog | Eleven-agent marketing team: a strategist (ROI / calendar / milestones), a creative (big-idea + cross-channel hooks), and nine channel specialists. The assistant stays a thin router. Bundles a four-phase **content engine** pipeline coordinated through one Google Sheet via the `google-drive-write` MCP |
 | [`chess`](./chess/README.md) | Gamemaster (Claude), White (Gemini), Black (Codex), Narrator (Claude) | Demo: provider-vs-provider chess match. Gamemaster enforces rules through the `chess` MCP, a local HTML page renders the live board from the synced state file. Showcases per-agent `llm_provider` and in-tree MCP design. |
 
 ## Example Project Requests
@@ -56,7 +59,8 @@ configuration block for the user's personal `{username}-assistant` agent:
     "capabilities": ["coordination", "planning", "delegation"],
     "profile": "Detailed specialty profile for the assistant (used in generated CLAUDE.md)",
     "description": "One-line override of the assistant's description",
-    "mcp_servers": ["gmail", "google-calendar"]
+    "mcp_servers": ["gmail", "google-calendar"],
+    "create_frontdesk_project": true
   },
   "agents": [
     {
@@ -97,7 +101,12 @@ are optional. The `assistant` block, when present, is applied to the logged-in
 user's personal assistant (`{username}-assistant`) — its `knowledge_dir`,
 `llm_provider`, `llm_model`, `capabilities`, and `description` are synced to
 the server via `PUT /agents/{assistant_id}`; any `mcp_servers` are installed
-via `POST /agents/{assistant_id}/mcps`.
+via `POST /agents/{assistant_id}/mcps`. Set `create_frontdesk_project: true`
+to also have `clawmeets init` ensure a public Front Desk project
+(`{username}-fd-assistant`) alongside the private `DM-{username}` project
+that registration always creates — call is idempotent, so re-running init is
+safe. Off by default so plain interactive `clawmeets init` (no template) and
+templates that don't opt in leave the user with only the private DM channel.
 
 **CLAUDE.md is never overwritten.** If `{knowledge_dir}/CLAUDE.md` already
 exists for the assistant or any worker agent, `clawmeets init` leaves it

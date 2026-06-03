@@ -1,18 +1,15 @@
 {
   "name": "Career Team",
-  "description": "Personal job-search crew: coach, researcher, interview prep, and outreach writer working in parallel from your resume and target list",
   "icon": "🎯",
   "color": "#3b6fd1",
   "cats": ["life"],
   "blurb": "Job search, interview prep, pivots, and offer negotiation in your corner.",
-  "pitch": "Your personal career coach, interview prep partner, and outreach writer. Bring your resume and JDs — they'll do the research, draft the letters, and run the mock interviews.",
   "sample_requests": [
-    {"title": "Final-round prep", "request": "I have an interview coming up for a [Role: Senior PM] at [Company: Stripe]. Tailor my **attached resume** to the role, deep-research the team and recent launches using anything I've saved, drill me on behavioral and product-sense questions, and draft a thank-you template I can personalize after each round."},
-    {"title": "Career pivot", "request": "I'm pivoting from [Current field: backend engineering] to [Target field: product management]. Reframe my **attached resume** narrative around transferable skills, suggest target roles that value my background, and prep me for the 'why are you switching?' question across 3 difficulty levels."},
-    {"title": "Targeted job hunt", "request": "I'm a [Current role: senior engineer] trying to break into [Target space: AI infrastructure startups]. Suggest a target company list ranked by fit with my background from the **attached resume**, draft tailored cover letters for the top matches, and prep a 30/60/90-day plan I can pitch in interviews."},
-    {"title": "Offer negotiation", "request": "I have competing offers [Package: $100K/year]. Benchmark both against market, model the equity expected value, draft a counter to whichever I'd want to push on, and prep my talking points for the negotiation call."},
-    {"title": "Layoff response", "request": "I was just laid off. Update my **attached resume**, write a 'looking for work' LinkedIn post in my voice, build a target company list that hires my profile, and draft personalized outreach templates I can adapt for my warm network."},
-    {"title": "Mock interview marathon", "request": "Mock-interview me for a [Role: Senior PM] role at [Company: Stripe] — system design, behavioral, and coding rounds (or whichever apply). @researcher: pull what's public about the company's interview loop and the team's recent work so the questions are company-specific, not generic. @interview_coach: run the rounds using my **attached resume** to predict deep-dive questions about my past projects. @career_coach: after each round, debrief the answers against my narrative arc and flag where I'm underselling."}
+    {"title": "Final-round prep packet", "request": "Build my final-round prep packet for [Role: Senior PM] at [Company: Stripe] from my **attached resume** and [JD: paste the job description here]. All deliverables go to `.bus-files/`. `@career_coach`: tailor the resume bullets to the JD; write `.bus-files/resume-tailored.md`. `@researcher`: WebSearch the company's recent launches, leadership posts, and public engineering writing — public sources only (skip levels.fyi / Blind / Glassdoor and flag anything you can't ground). Write `.bus-files/company-brief.md` with a one-paragraph what-they-do, 5 recent moves with source URLs, 3 talking points I can drop into the interview, and 3 risks / red flags I should ask about. `@interview_coach`: read the resume + brief and write `.bus-files/star-bank.md` (6 STAR-format answers from MY history covering scope / ownership / conflict / failure) plus `.bus-files/likely-questions.md` (10 level-appropriate questions tuned to this company / role). `@outreach_writer`: write `.bus-files/thank-you-template.md` — a thank-you note template with `[PLACEHOLDER]` slots for whatever topics actually come up. Coordinator: stitch `.bus-files/PREP.md` — a one-page index linking all of the above, plus the ONE thing I should rehearse hardest before the loop."},
+    {"title": "Mock interview marathon", "request": "Mock-interview me for a [Role: Senior PM] role at [Company: Stripe] — system design, behavioral, and coding rounds (or whichever apply). @researcher: pull what's public about the company's interview loop and the team's recent work so the questions are company-specific, not generic. @interview_coach: run the rounds using my **attached resume** to predict deep-dive questions about my past projects. @career_coach: after each round, debrief the answers against my narrative arc and flag where I'm underselling."},
+    {"title": "Final-round prep", "request": "I have an interview coming up for a [Role: Senior PM] at [Company: Stripe]. `@career_coach`: tailor my **attached resume** to the role. `@researcher`: WebSearch the team and recent launches — public sources only (engineering blog, press, public talks); flag what's not groundable. `@interview_coach`: drill me on behavioral and product-sense questions. `@outreach_writer`: draft a thank-you template I can personalize after each round."},
+    {"title": "Targeted job hunt", "request": "I'm a [Current role: senior engineer] trying to break into [Target space: AI infrastructure startups]. `@career_coach`: from my **attached resume**, build a tiered target list (reach / match / safety) using public-web research only — actively hiring, profile fit. `@outreach_writer`: draft tailored cover letters for the top 3. `@career_coach`: prep a 30/60/90-day plan I can pitch in interviews."},
+    {"title": "Layoff response", "request": "I was just laid off. `@career_coach`: update my **attached resume** for the open market. `@outreach_writer`: write a 'looking for work' LinkedIn post in my voice, plus personalized outreach templates I can adapt for my warm network. `@career_coach`: build a target company list that hires my profile."}
   ],
   "assistant": {
     "knowledge_dir": "./owner",
@@ -23,6 +20,7 @@
     {
       "name": "career_coach",
       "user_teams": ["career"],
+      "blurb": "Coaches your job search end-to-end",
       "description": "Career Coach - tailors your resume to each role, sharpens your story arc, plans your application strategy, and coaches you through compensation negotiation",
       "capabilities": ["resume tailoring", "ATS optimization", "career narrative", "pivot framing", "application strategy", "compensation benchmarking", "negotiation prep"],
       "knowledge_dir": "./career_coach",
@@ -39,6 +37,7 @@
     {
       "name": "researcher",
       "user_teams": ["career"],
+      "blurb": "Researches companies, teams, and hiring managers",
       "description": "Job-Search Researcher - deep-dives companies, teams, hiring managers, and comp data so every conversation is informed",
       "capabilities": ["company research", "team intelligence", "people research", "salary benchmarking", "industry trends", "competitive landscape", "interviewer profiling"],
       "knowledge_dir": "./researcher",
@@ -46,8 +45,8 @@
         {"category": "Company brief", "title": "One-page company brief", "request": "Build a one-pager on [Company: Stripe]: recent news, funding, leadership, product roadmap signals, and any culture flags."},
         {"category": "Company brief", "title": "Why-now story for this role", "request": "Find the strategic reason [Role: Senior PM] at [Company: Stripe] exists right now — recent launches, layoffs, hiring waves, or org shifts."},
         {"category": "Team & people", "title": "Profile my interview panel", "request": "Pull public profiles for [Panel: paste interviewer names, comma-separated] — backgrounds, recent talks, things I can reference authentically."},
-        {"category": "Team & people", "title": "Map the team I'd join", "request": "Surface team size, reporting structure, recent hires/departures, and who reports to whom on the team behind [Role: Senior PM] at [Company: Stripe]."},
-        {"category": "Comp & market", "title": "Benchmark my comp", "request": "Pull salary bands for [Level: Senior PM] in [Function: Product] in [Location: SF Bay Area] at peer companies, plus equity norms for this stage."},
+        {"category": "Team & people", "title": "Map the team I'd join", "request": "Map the team behind [Role: Senior PM] at [Company: Stripe] from public signals only — engineering blog authorship, conference speaker bios, press coverage, public org charts where they exist. LinkedIn details are partially gated; report what you can verify and label the rest as a guess."},
+        {"category": "Comp & market", "title": "Benchmark my comp", "request": "Pull salary bands for [Level: Senior PM] in [Function: Product] in [Location: SF Bay Area] using public sources only — BLS data, state pay-disclosure filings, job postings that list ranges, and public 10-Ks / proxies for executive bands. Flag anything you can't ground; do not invent numbers from levels.fyi / Blind / Glassdoor."},
         {"category": "Comp & market", "title": "Industry trend scan", "request": "Show me the macro trends shaping [Role: Product Manager at infrastructure startups] over the next 12 months — hot skills, declining roles, geographic shifts."}
       ],
       "profile": "### Company Intelligence\n- Recent news, funding rounds, leadership changes, layoffs, and hiring waves\n- Product roadmap signals from launches, job postings, and engineering blog posts\n- Financial health indicators (revenue, runway, profitability, public filings)\n- Culture signals from Glassdoor, Blind, employee tweets, and press coverage\n\n### Role & Team Deep-Dive\n- Team size, reporting structure, and where the role sits in the org\n- Tech stack, tooling, and engineering practices (from job posts and GitHub)\n- Recent hires and departures on the team (LinkedIn signals)\n- Manager background, tenure, and management style indicators\n\n### Industry & Comp Data\n- Salary bands by level, location, and company stage\n- Market trends shaping the role (hot skills, declining roles, geographic shifts)\n- Competitive landscape: who else hires this profile and how they differ\n- Equity norms by company stage (seed, growth, pre-IPO, public)\n\n### People Research\n- Interviewer LinkedIn profiles, prior companies, public talks, writing\n- Mutual connections and warm-intro paths\n- Talking points and shared interests to build rapport authentically\n- Recent posts or projects worth referencing in the conversation"
@@ -55,6 +54,7 @@
     {
       "name": "interview_coach",
       "user_teams": ["career"],
+      "blurb": "Runs mock interviews and STAR-format prep",
       "description": "Interview Coach - runs mock interviews, builds STAR-format answers from your real history, and preps role-specific rounds (system design, product sense, case, coding)",
       "capabilities": ["behavioral interview prep", "STAR storytelling", "system design", "product sense", "case interview", "coding interview", "mock interviews", "post-interview debrief"],
       "knowledge_dir": "./interview_coach",
@@ -71,6 +71,7 @@
     {
       "name": "outreach_writer",
       "user_teams": ["career"],
+      "blurb": "Drafts cover letters, recruiter messages, and intros",
       "description": "Outreach Writer - drafts cover letters, recruiter and hiring-manager messages, networking intros, and follow-ups that get replies",
       "capabilities": ["cover letters", "recruiter outreach", "LinkedIn DMs", "warm-intro requests", "informational interviews", "follow-up messages", "thank-you notes"],
       "knowledge_dir": "./outreach_writer",

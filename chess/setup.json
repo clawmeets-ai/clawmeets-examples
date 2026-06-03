@@ -1,11 +1,9 @@
 {
   "name": "Chess Match",
-  "description": "Provider-vs-provider chess: Gemini plays white, Codex plays black, a Claude gamemaster enforces the rules via a chess MCP, and a Claude narrator calls the match. A local HTML page renders the board live from the synced state file.",
   "icon": "♞",
   "color": "#3b3946",
   "cats": ["play"],
   "blurb": "Study, openings, tactics, and post-game analysis with a coach who never sleeps.",
-  "pitch": "Analyze your games, build a repertoire, drill tactics, and study opponents before tournaments. Feed it a PGN and it'll tell you where you went wrong — kindly.",
   "sample_requests": [
     {"title": "Start a match", "request": "Start a new chess match. Pick a short game_id (e.g. `game-001`), reply with the path to `board.html` so I can open it, and kick off White's first move."},
     {"title": "Replay a famous opening", "request": "Start a match where White opens 1. e4 e5 2. Nf3 Nc6 3. Bb5 (the Ruy Lopez) and then both players continue from there on their own. Game id: ruy-lopez-01. @narrator, please name the line as it branches."},
@@ -20,6 +18,7 @@
     {
       "name": "gamemaster",
       "user_teams": ["chess"],
+      "blurb": "Referees the match and validates every move",
       "description": "Chess gamemaster — owns the canonical board state via the chess MCP, validates every move, announces whose turn is next",
       "capabilities": ["chess rules enforcement", "board state management", "turn arbitration"],
       "knowledge_dir": "./gamemaster",
@@ -36,6 +35,7 @@
     {
       "name": "white",
       "user_teams": ["chess"],
+      "blurb": "Plays the white pieces (powered by Gemini)",
       "description": "Plays the white pieces. Powered by Gemini — showcases non-Claude play.",
       "capabilities": ["chess play (white)", "opening theory", "tactical calculation"],
       "knowledge_dir": "./white",
@@ -52,6 +52,7 @@
     {
       "name": "black",
       "user_teams": ["chess"],
+      "blurb": "Plays the black pieces (powered by Codex)",
       "description": "Plays the black pieces. Powered by Codex — showcases OpenAI play.",
       "capabilities": ["chess play (black)", "defensive structures", "counterattack"],
       "knowledge_dir": "./black",
@@ -67,6 +68,7 @@
     {
       "name": "narrator",
       "user_teams": ["chess"],
+      "blurb": "Calls the match like a chess commentator",
       "description": "Calls the match in the style of a chess commentator. One or two sentences per move.",
       "capabilities": ["chess commentary", "pattern recognition", "dramatic storytelling"],
       "knowledge_dir": "./narrator",

@@ -1,13 +1,11 @@
 {
   "name": "Health & Wellness Team",
-  "description": "Personal wellness crew: nutrition, training, sleep, and mind — coordinated around your goals, your data, and the life you actually have time for",
   "icon": "🌿",
   "color": "#0d6d57",
   "cats": ["life"],
   "blurb": "Training plans, sleep, mindfulness, and keeping your habits honest.",
-  "pitch": "Not a doctor — just a thoughtful partner who tracks your habits, builds your training plan, and notices when you're slipping.",
   "sample_requests": [
-    {"title": "Weekly wellness plan", "request": "Build my week: 3 strength workouts + 2 zone-2 sessions matched to the open slots on my calendar (in my knowledge folder), a meal plan hitting my macro target, a sleep schedule with a consistent wake time, and a 5-minute morning journaling prompt. One page I can put on my desk."},
+    {"title": "Weekly wellness sheet", "request": "It's Sunday night. Build my week as a desk sheet. All deliverables go to `.bus-files/week-of-[Date: YYYY-MM-DD]/`. `@fitness_coach`: 3 strength workouts + 2 zone-2 sessions matched to the open slots on my calendar in my knowledge folder; warmup + cooldown notes per session; write `.bus-files/week-of-[Date]/TRAINING.md`. `@nutritionist`: meal plan hitting my macro target from a 10–15 'always works' rotation; flag the days where training intensity changes the fueling; write `.bus-files/week-of-[Date]/MEALS.md`. `@sleep_coach`: consistent wake time, wind-down sequence tuned to my evenings, and the recovery-state read from my wearable export in my knowledge folder; write `.bus-files/week-of-[Date]/SLEEP.md`. `@mind_coach`: a 5-minute morning journaling prompt for each weekday, a 15-minute weekly reflection prompt, and one acute-stress reset I can call on mid-day; write `.bus-files/week-of-[Date]/MIND.md`. Coordinator: stitch `.bus-files/week-of-[Date]/SHEET.md` — a one-page printable with training-by-day, meal pattern, sleep window, today's journaling prompt, and the ONE thing not to skip this week."},
     {"title": "Body-composition cut", "request": "I want to lose [Target: 10 lbs] over [Timeline: 12 weeks] for [Event or reason: wedding in June]. Set my macros, build a progressive lifting program with deloads, design a sleep + stress routine that supports the deficit, and define a weekly check-in I can run against the wearable / weigh-in data I'll drop into my knowledge folder."},
     {"title": "First half-marathon", "request": "I'm running my first half-marathon in [Timeline: 16 weeks]; my current 5K pace is in my training log. Build a weekly training plan, layer in strength + mobility for injury prevention, dial in race-fueling and hydration practice, and prep me mentally for the long runs and the race itself."},
     {"title": "Burnout recovery", "request": "I'm coming off a brutal stretch — sleep is wrecked, my resting heart rate is elevated, energy is gone, mood is flat. Run a 4-week recovery protocol: rebuild sleep first, ease back into training at low intensity, fix nutrition (I've been skipping meals), and add daily stress-down practices. Weekly check-ins against the wearable export I put in my knowledge folder."},
@@ -23,7 +21,8 @@
     {
       "name": "nutritionist",
       "user_teams": ["wellness"],
-      "description": "Nutritionist - sets your calorie and macro targets, builds meal patterns you'll actually eat, and adjusts as the data comes in",
+      "blurb": "Sets your calorie and macro targets, then iterates",
+      "description": "Nutritionist - sets your calorie and macro targets, builds meal patterns you'll actually eat, and adjusts as the data comes in. Reads weight trends, energy logs, and lab markers; iterates on the diet around your training load, schedule, and food preferences.",
       "capabilities": ["macro targets", "meal planning", "recipe selection", "hydration", "supplement guidance", "eating patterns", "data-driven adjustments"],
       "knowledge_dir": "./nutritionist",
       "sample_requests": [
@@ -39,6 +38,7 @@
     {
       "name": "fitness_coach",
       "user_teams": ["wellness"],
+      "blurb": "Programs training, manages load, and tracks recovery",
       "description": "Fitness Coach - programs your training, progresses the load, manages mobility and recovery, and keeps you honest about what your week can actually support",
       "capabilities": ["program design", "progressive overload", "periodization", "mobility", "prehab", "recovery management", "form coaching"],
       "knowledge_dir": "./fitness_coach",
@@ -55,6 +55,7 @@
     {
       "name": "sleep_coach",
       "user_teams": ["wellness"],
+      "blurb": "Tunes your sleep schedule and recovery tracking",
       "description": "Sleep Coach - tunes your sleep schedule, evening routine, and recovery tracking using your Whoop / Oura / Apple Watch data — and protects sleep when life pushes back",
       "capabilities": ["sleep hygiene", "recovery tracking", "HRV interpretation", "evening routines", "circadian rhythm", "jet lag protocols", "nap strategy"],
       "knowledge_dir": "./sleep_coach",
@@ -71,6 +72,7 @@
     {
       "name": "mind_coach",
       "user_teams": ["wellness"],
+      "blurb": "Runs stress regulation, journaling, and mindfulness",
       "description": "Mind Coach - runs your stress regulation, journaling cadence, and mindfulness practice; tracks mood signals and knows when to nudge you toward a real therapist",
       "capabilities": ["stress regulation", "breathwork", "journaling", "meditation", "mood tracking", "habit formation", "mental health awareness"],
       "knowledge_dir": "./mind_coach",
