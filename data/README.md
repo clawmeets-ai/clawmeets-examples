@@ -1,15 +1,15 @@
 # Business Data Team
 
-Three sync workers that pull your **actual** business data — databases, Google Drive folders, partner APIs — into a local (network-shareable) data warehouse on a schedule. Each sync entry's `merge_policy` (replace or upsert) does the dedup / snapshot work, so the consolidated `merged/<source>/<name>.<ext>` is downstream-ready. A `data_scientist` reads that data (and `derived/<view>/` when present), runs hypothesis tests, builds features, runs lightweight models, and turns it all into business answers — revenue dashboards, cohort analyses, pricing memos, anomaly drill-downs, exec briefs — under `.bus-files/`. When an analysis matures into something worth re-running on schedule, the scientist promotes it to a personal skill that writes to `derived/<view>/`. Sync + dedup logic lives inside each MCP (deterministic Python); science and analysis live where they belong (genuinely LLM work).
+Three sync workers that pull your **actual** business data — databases, Google Drive folders, partner APIs — into a local (network-shareable) data warehouse on a schedule. Each sync entry's `merge_policy` (replace or upsert) does the dedup / snapshot work, so the consolidated `merged/<source>/<name>.<ext>` is downstream-ready. A `data_scientist` reads that data (and `derived/<view>/` when present), runs hypothesis tests, builds features, runs lightweight models, and turns it all into business answers — revenue dashboards, cohort analyses, pricing memos, anomaly drill-downs, exec briefs — under `deliverables/`. When an analysis matures into something worth re-running on schedule, the scientist promotes it to a personal skill that writes to `derived/<view>/`. Sync + dedup logic lives inside each MCP (deterministic Python); science and analysis live where they belong (genuinely LLM work).
 
 ## The Team
 
 | Agent | What they do | Storage owned |
 |-------|--------------|---------------|
-| `@db_sync` *(database MCP)* | Calls `mcp__clawmeets-db__sync_to_warehouse` on the trigger marker; one per-run TSV per query (header row = SQL column names) plus a merged TSV per `merge_policy`; multi-query per agent via `{agent_dir}/mcp-hub/configs/database.json` | `dwh_dir/sources/database/<query>/<TIMESTAMP>/data.tsv` + `dwh_dir/merged/database/<query>.tsv` |
-| `@gdrive_sync` *(google-drive MCP)* | Calls `mcp__clawmeets-gdrive__sync_to_warehouse`; one file per Drive file per run plus a merged JSON array of envelopes per `merge_policy`; multi-slice per agent via `{agent_dir}/mcp-hub/configs/google-drive.json`; slice scope by `folder_ids` and/or `file_ids` and/or `sheet_tabs` (per-tab Sheets API for surgical single-tab pulls) and/or free-form `query`; small text bodies inlined, binary mimes path-only | `dwh_dir/sources/google-drive/<slice>/<TIMESTAMP>/<file_id>.json` + `dwh_dir/merged/google-drive/<slice>.json` |
-| `@api_sync` *(http-api MCP)* | Calls `mcp__clawmeets-api__sync_to_warehouse`; one per-run TSV per endpoint (header row = response row keys) plus a merged TSV per `merge_policy`; multi-endpoint per agent; auth secrets in runner env vars only | `dwh_dir/sources/api/<endpoint>/<TIMESTAMP>/data.tsv` + `dwh_dir/merged/api/<endpoint>.tsv` |
-| `@data_scientist` | Reads three layers in order of stability: `derived/<view>/` (own previously-promoted views, when present), `merged/<source>/<name>.<ext>` + sibling `.howto.md`, then own prior `.bus-files/` artifacts in the same chatroom. Explores, tests hypotheses, builds features, runs lightweight models, AND turns findings into business answers (cohort analyses, pricing memos, exec briefs, weekly dashboards). Ships single-file interactive HTML via the bundled `web-artifacts` skill. Default output is `.bus-files/`. When an analysis is stable enough to re-run on schedule, creates a personal skill that writes to `derived/<view>/` — that's the only path by which `derived/` gets populated. | `.bus-files/` (default) + `derived/<view>/` (via promoted personal skills) |
+| `@database` *(database MCP)* | Calls `mcp__clawmeets-db__sync_to_warehouse` on the trigger marker; one per-run TSV per query (header row = SQL column names) plus a merged TSV per `merge_policy`; multi-query per agent via `{agent_dir}/mcp-hub/configs/database.json` | `dwh_dir/sources/database/<query>/<TIMESTAMP>/data.tsv` + `dwh_dir/merged/database/<query>.tsv` |
+| `@gdrive` *(google-drive MCP)* | Calls `mcp__clawmeets-gdrive__sync_to_warehouse`; one file per Drive file per run plus a merged JSON array of envelopes per `merge_policy`; multi-slice per agent via `{agent_dir}/mcp-hub/configs/google-drive.json`; slice scope by `folder_ids` and/or `file_ids` and/or `sheet_tabs` (per-tab Sheets API for surgical single-tab pulls) and/or free-form `query`; small text bodies inlined, binary mimes path-only | `dwh_dir/sources/google-drive/<slice>/<TIMESTAMP>/<file_id>.json` + `dwh_dir/merged/google-drive/<slice>.json` |
+| `@api` *(http-api MCP)* | Calls `mcp__clawmeets-api__sync_to_warehouse`; one per-run TSV per endpoint (header row = response row keys) plus a merged TSV per `merge_policy`; multi-endpoint per agent; auth secrets in runner env vars only | `dwh_dir/sources/api/<endpoint>/<TIMESTAMP>/data.tsv` + `dwh_dir/merged/api/<endpoint>.tsv` |
+| `@data_scientist` | Reads three layers in order of stability: `derived/<view>/` (own previously-promoted views, when present), `merged/<source>/<name>.<ext>` + sibling `.howto.md`, then own prior `deliverables/` artifacts in the same chatroom. Explores, tests hypotheses, builds features, runs lightweight models, AND turns findings into business answers (cohort analyses, pricing memos, exec briefs, weekly dashboards). Ships single-file interactive HTML via the bundled `web-artifacts` skill. Default output is `deliverables/`. When an analysis is stable enough to re-run on schedule, creates a personal skill that writes to `derived/<view>/` — that's the only path by which `derived/` gets populated. | `deliverables/` (default) + `derived/<view>/` (via promoted personal skills) |
 
 The three syncers are thin: each says "see the matching trigger marker → call the MCP tool → post a one-line summary". The bookkeeping (state files, window math, atomic writes, watermark advancement, soft time/row budgets) lives inside the MCP server in deterministic Python — not in LLM prose. Sync is read-only.
 
@@ -28,21 +28,21 @@ clawmeets start
 
 The `dwh_dir` is the on-disk root where raw rows + watermarks land. Typically a single network shared file system mount (e.g. `/mnt/dwh`) or a local path (e.g. `~/dwh`). Set it explicitly per agent in **Agent Settings → Runner Settings → Data Warehouse Directory**:
 
-- `db_sync` → `/mnt/dwh`
-- `gdrive_sync` → `/mnt/dwh`
-- `api_sync` → `/mnt/dwh`
+- `database` → `/mnt/dwh`
+- `gdrive` → `/mnt/dwh`
+- `api` → `/mnt/dwh`
 - `data_scientist` → `/mnt/dwh` *(reads `merged/` + `derived/<view>/`; writes `derived/<view>/` via promoted personal skills)*
 
 Four agents, one shared path is the typical setup — they each touch a different sub-directory.
 
 > CLI alternative: `clawmeets agent set-dwh-dir <agent> /mnt/dwh`. The runner picks up the change on the next task (no restart needed). If `dwh_dir` is unset, the agent's profile rules say to reply *"warehouse not configured"* and stop — there's no implicit default.
 
-### 2. Configure `db_sync` and `api_sync` via `{knowledge_dir}/config.json`
+### 2. Configure `database` and `api` via `{knowledge_dir}/config.json`
 
 Both agents are MCP-driven but the MCPs need per-agent configuration: which DB to connect to and which queries to run; which API endpoints to hit and how to wire auth + watermarks into the request. Write that config **before** the first sync trigger. Knowledge dir layout:
 
 ```
-~/.clawmeets/agents/<username>-db_sync-<id>/db_syncer/
+~/.clawmeets/agents/<username>-database-<id>/db_syncer/
 └── config.json           ← write this
 ```
 
@@ -61,7 +61,7 @@ Both configs use `${VAR}` placeholders. The MCP injects these reserved runtime t
 
 Unset user-defined tokens (e.g. `${PG_PWD}` when `PG_PWD` is unset) cause the sync to return `status="error"` with the missing-name list. Reserved tokens with no value substitute to the empty string so opaque-cursor APIs work without forcing a sentinel.
 
-#### `db_sync/config.json`
+#### `database/config.json`
 
 ```json
 {
@@ -107,7 +107,7 @@ pip install "psycopg[binary]"   # for Postgres
 
 The MCP **lazy-imports** SQLAlchemy and the driver, so the runner package stays small. If they're missing at sync time, the tool returns `status="error"` with a clear install hint.
 
-#### `api_sync/config.json`
+#### `api/config.json`
 
 ```json
 {
@@ -134,7 +134,7 @@ The MCP **lazy-imports** SQLAlchemy and the driver, so the runner package stays 
 }
 ```
 
-Same `merge_policy` contract as `db_sync` — `"upsert"` for incremental delta sources (Stripe charges, Slack messages, anything log-structured), `"replace"` for snapshot endpoints (a daily exchange-rate CSV, a roster JSON refreshed nightly).
+Same `merge_policy` contract as `database` — `"upsert"` for incremental delta sources (Stripe charges, Slack messages, anything log-structured), `"replace"` for snapshot endpoints (a daily exchange-rate CSV, a roster JSON refreshed nightly).
 
 Each endpoint is a free-form HTTP request template. Auth lives in `headers` (not a special field), watermarks land wherever the API expects them via reserved tokens, pagination cursors get wired the same way. POST endpoints with JSON bodies work the same way — put `${VAR}` placeholders inside `body`.
 
@@ -147,19 +147,19 @@ clawmeets start
 
 The full config schema is documented in [`mcps/http-api/README.md`](../../mcps/http-api/README.md).
 
-### 3. Install + authorize the `google-drive` MCP for `gdrive_sync`
+### 3. Install + authorize the `google-drive` MCP for `gdrive`
 
 `google-drive` is **not** pre-installed by the template — it's installed manually because that's the path that drives Google's OAuth consent flow.
 
-1. Open **`gdrive_sync` Agent Settings → MCP Servers**.
+1. Open **`gdrive` Agent Settings → MCP Servers**.
 2. Install `google-drive`. The runner's relay OAuth fires automatically — you'll see a "Continue with Google" link in the agent's DM.
 3. Click it, complete consent in your browser, and the auth code is delivered back to the runner.
 
 Tokens land at `~/.clawmeets/agents/<agent>-<id>/mcp-hub/servers/google-drive/token.json` (mode 0600, agent-private, never synced to the server).
 
-> CLI fallback: `clawmeets mcp auth google-drive --agent gdrive_sync`. Always uses the local OAuth flow regardless of `CLAWMEETS_OAUTH_MODE`.
+> CLI fallback: `clawmeets mcp auth google-drive --agent gdrive`. Always uses the local OAuth flow regardless of `CLAWMEETS_OAUTH_MODE`.
 
-**Required — configure named slices.** `gdrive_sync` only syncs what the config tells it to. Each slice gets its own output directory and watermark under `dwh_dir/sources/google-drive/<name>/`, plus a merged JSON array of envelopes at `dwh_dir/merged/google-drive/<name>.json`. Click **Configure** next to `google-drive` in the same MCP panel and edit the JSON:
+**Required — configure named slices.** `gdrive` only syncs what the config tells it to. Each slice gets its own output directory and watermark under `dwh_dir/sources/google-drive/<name>/`, plus a merged JSON array of envelopes at `dwh_dir/merged/google-drive/<name>.json`. Click **Configure** next to `google-drive` in the same MCP panel and edit the JSON:
 
 ```json
 {
@@ -200,22 +200,19 @@ Once each syncer has its `dwh_dir` and (where applicable) its config / MCP autho
 
 ```bash
 # Hourly DB sync, on the hour
-clawmeets schedule add \
-  --chatroom dm-<username>-db_sync \
-  --cron "0 * * * *" \
-  --content $'<!-- clawmeets:db-sync-trigger -->\nHourly DB sync.'
+clawmeets dm schedule <username>-database \
+  $'<!-- clawmeets:db-sync-trigger -->\nHourly DB sync.' \
+  --cron "0 * * * *" -u <username> -p <password>
 
 # Hourly Drive sync, offset by 15 min
-clawmeets schedule add \
-  --chatroom dm-<username>-gdrive_sync \
-  --cron "15 * * * *" \
-  --content $'<!-- clawmeets:gdrive-sync-trigger -->\nHourly Drive sync.'
+clawmeets dm schedule <username>-gdrive \
+  $'<!-- clawmeets:gdrive-sync-trigger -->\nHourly Drive sync.' \
+  --cron "15 * * * *" -u <username> -p <password>
 
 # Hourly API sync, offset by 30 min
-clawmeets schedule add \
-  --chatroom dm-<username>-api_sync \
-  --cron "30 * * * *" \
-  --content $'<!-- clawmeets:api-sync-trigger -->\nHourly API sync.'
+clawmeets dm schedule <username>-api \
+  $'<!-- clawmeets:api-sync-trigger -->\nHourly API sync.' \
+  --cron "30 * * * *" -u <username> -p <password>
 ```
 
 Or fire any sync manually from the agent's DM zero-state launchpad — the **Sync** sample requests are pre-loaded with the right trigger marker and copy to your clipboard with one click.
@@ -304,15 +301,15 @@ The dwh layout decouples **ingestion** from **derivation** from **analysis** so 
 |---|---|---|---|
 | `sources/<source>/<name>/<TIMESTAMP>/` + `merged/<source>/<name>.<ext>` | Syncers (db / gdrive / api) | Scheduled (hourly / nightly) | New / updated rows from the source of truth, folded into the consolidated merged file |
 | `derived/<view>/` | `@data_scientist` (via promoted personal skill) | Scheduled re-runs of promoted views | Feature definitions, aggregation rules, model scores — anything mature enough to be worth recomputing on cadence |
-| `.bus-files/` reports | `@data_scientist` | Per-project, on-demand | Exploration memos, hypothesis tests, business answers, decisions, narratives |
+| `deliverables/` reports | `@data_scientist` | Per-project, on-demand | Exploration memos, hypothesis tests, business answers, decisions, narratives |
 
 If you change the feature definition for `derived/orders_with_payment/`, you don't re-sync — you edit the promoted personal skill and re-run it. If you change the business question, you don't re-promote — you re-query the existing `derived/` view or read from `merged/` directly. Each layer is independently rebuildable from the layer below.
 
 ## Deliberate non-features
 
 - **No LLM-side `has_more` looping.** When a budget fires the MCP returns `has_more=true` and the agent reports it; the next scheduled trigger continues. Removes the only complex bit of LLM-side state from the contract.
-- **No tagging / classification / aggregation in syncers** — that's the data_scientist's job (in `.bus-files/`, or in promoted personal skills writing to `derived/<view>/`). Syncers are pure ingest + dedup bookkeeping.
-- **No write-back to source.** Sync is read-only by convention — `api_sync` does support POST/PUT request methods (some APIs require them for read endpoints), but the warehouse contract is one-way.
+- **No tagging / classification / aggregation in syncers** — that's the data_scientist's job (in `deliverables/`, or in promoted personal skills writing to `derived/<view>/`). Syncers are pure ingest + dedup bookkeeping.
+- **No write-back to source.** Sync is read-only by convention — `api` does support POST/PUT request methods (some APIs require them for read endpoints), but the warehouse contract is one-way.
 - **No credentials in config files.** Both syncers reference secrets via `${VAR}` placeholders that resolve from `os.environ` on the runner. Config files hold only placeholder names — safe to share over a network shared file system, safe to commit to a private dotfiles repo.
 - **No data_scientist-direct-reads-sources/.** The data_scientist reads `merged/<source>/<name>.<ext>` (consolidated and deduped — equivalent to the raw layer for any practical purpose). If a stable view is needed for recurring questions, the right move is to promote a personal skill that recomputes from `merged/` and writes to `derived/<view>/` — not to spin up a one-off in chat every time.
 - **No `derived/` writes from outside data_scientist's promoted personal skills.** Same single-writer discipline as `sources/`.

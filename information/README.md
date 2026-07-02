@@ -46,10 +46,9 @@ One-time per machine. Verifies Node ≥ 20 and installs `playwright`'s Chromium.
 Each rule fires on its own trigger marker `<!-- clawmeets:<rule>-website-monitor-trigger -->`. Example:
 
 ```bash
-clawmeets schedule add \
-  --chatroom dm-<username>-website_monitor \
-  --cron "0 * * * *" \
-  --content $'<!-- clawmeets:ai-news-website-monitor-trigger -->\nHourly AI-news crawl.'
+clawmeets dm schedule <username>-website_monitor \
+  $'<!-- clawmeets:ai-news-website-monitor-trigger -->\nHourly AI-news crawl.' \
+  --cron "0 * * * *" -u <username> -p <password>
 ```
 
 Or fire any rule manually from the agent's DM zero-state launchpad.

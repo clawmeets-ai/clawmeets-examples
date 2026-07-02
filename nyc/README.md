@@ -52,10 +52,9 @@ For each agent, open **Agent Settings → Skills → website-monitor → Configu
 Events-style rules want daily cadence; evergreen listings can run weekly. Each rule fires on `<!-- clawmeets:<rule>-website-monitor-trigger -->`:
 
 ```bash
-clawmeets schedule add \
-  --chatroom dm-<username>-nyc_dining \
-  --cron "0 6 * * *" \
-  --content $'<!-- clawmeets:nyc-dining-new-openings-website-monitor-trigger -->\nDaily NYC dining crawl.'
+clawmeets dm schedule <username>-nyc_dining \
+  $'<!-- clawmeets:nyc-dining-new-openings-website-monitor-trigger -->\nDaily NYC dining crawl.' \
+  --cron "0 6 * * *" -u <username> -p <password>
 ```
 
 ### 4. (Optional) Install playwright-browser

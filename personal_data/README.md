@@ -25,7 +25,7 @@ ever leaving your network.
 | `@photo` | macOS Photos (`osxphotos` MCP) | Sync newly-added photo metadata on the trigger marker; interactive list albums / list photos / export | `dwh_dir/sources/osxphotos/` + `dwh_dir/merged/osxphotos.json` (single dataset) |
 | `@website_monitor` | WebFetch (`website-monitor` skill) | Crawl per-rule entry URLs on the trigger marker; extract items matching a free-text `content_of_interest` description | `dwh_dir/{sources,merged}/website/<rule>/` (one rule per watched site theme) |
 | `@gdrive_inbox` | Google Sheets push (`google-drive` MCP) | Sync IFTTT/Zapier-fed Sheet tabs on the trigger marker; interactive sample / inspect rows; one slice per tab | `dwh_dir/{sources,merged}/google-drive/<slice>/` (one slice per Sheet tab) |
-| `@data_organizer` | (no MCP yet) | Walks `merged/`, proposes ETL rules, samples candidate rows, reports on `derived/` state — the seat for the derivation layer while the skills are designed | `dwh_dir/derived/<rule>/` (writes once skills land) + `.bus-files/` (surveys, proposals today) |
+| `@data_organizer` | (no MCP yet) | Walks `merged/`, proposes ETL rules, samples candidate rows, reports on `derived/` state — the seat for the derivation layer while the skills are designed | `dwh_dir/derived/<rule>/` (writes once skills land) + `deliverables/` (surveys, proposals today) |
 
 All five sync agents run in **two modes**: scheduled sync (one tool
 call, one-line reply) on a `<!-- clawmeets:<source>-sync-trigger -->`
@@ -367,28 +367,24 @@ cron triggers:
 
 ```bash
 # Hourly mail sync
-clawmeets schedule add \
-  --chatroom dm-<username>-mailbox \
-  --cron "0 * * * *" \
-  --content $'<!-- clawmeets:mailbox-sync-trigger -->\nHourly mail sync.'
+clawmeets dm schedule <username>-mailbox \
+  $'<!-- clawmeets:mailbox-sync-trigger -->\nHourly mail sync.' \
+  --cron "0 * * * *" -u <username> -p <password>
 
 # Hourly calendar sync, offset 15 min
-clawmeets schedule add \
-  --chatroom dm-<username>-calendar \
-  --cron "15 * * * *" \
-  --content $'<!-- clawmeets:calendar-sync-trigger -->\nHourly calendar sync.'
+clawmeets dm schedule <username>-calendar \
+  $'<!-- clawmeets:calendar-sync-trigger -->\nHourly calendar sync.' \
+  --cron "15 * * * *" -u <username> -p <password>
 
 # Nightly photo index, 3 AM
-clawmeets schedule add \
-  --chatroom dm-<username>-photo \
-  --cron "0 3 * * *" \
-  --content $'<!-- clawmeets:photo-sync-trigger -->\nNightly photo index.'
+clawmeets dm schedule <username>-photo \
+  $'<!-- clawmeets:photo-sync-trigger -->\nNightly photo index.' \
+  --cron "0 3 * * *" -u <username> -p <password>
 
 # IFTTT/Zapier-fed Sheet inbox, every 10 min
-clawmeets schedule add \
-  --chatroom dm-<username>-gdrive_inbox \
-  --cron "*/10 * * * *" \
-  --content $'<!-- clawmeets:gdrive-inbox-sync-trigger -->\nSync IFTTT-fed inbox sheets.'
+clawmeets dm schedule <username>-gdrive_inbox \
+  $'<!-- clawmeets:gdrive-inbox-sync-trigger -->\nSync IFTTT-fed inbox sheets.' \
+  --cron "*/10 * * * *" -u <username> -p <password>
 ```
 
 Or fire any sync from the agent's DM zero-state launchpad — the **Sync**
@@ -467,9 +463,9 @@ Most rule skills not shipped yet. `@data_organizer` runs the four
 pre-skill workflows from its sample requests:
 
 1. **Survey the warehouse** — row counts + headline categories per
-   source → `.bus-files/dwh-survey.md`
+   source → `deliverables/dwh-survey.md`
 2. **Propose ETL rules** — 2–3 derivation rules with filter + schema +
-   intended consumer → `.bus-files/etl-proposals.md`
+   intended consumer → `deliverables/etl-proposals.md`
 3. **Sample candidate rows for a rule** — sanity-check the filter on
    real source rows before committing a SKILL.md
 4. **Derivation-layer status** — read each `derived/<rule>/etl-state.json`

@@ -11,11 +11,11 @@
   "sample_requests": [
     {
       "title": "Friday-night TODAY brief — full crew",
-      "request": "I'm an assistant working on behalf of [Visitor / Resident: name, neighborhood/hotel, budget, vibe, hard constraints (dietary, mobility, hours, etc.), time window]. Compose a Friday-night TODAY brief.\n\n`@nyc_dining`: 2–3 dinner picks (early or late seating per the time window).\n`@nyc_music` / `@nyc_nightlife`: 2 post-dinner picks — one music, one bar/nightlife — picked to fit the same neighborhood or one short hop away.\n`@nyc_culture`: 1 optional pre-dinner pick (gallery opening, evening lecture, late museum hours) if it fits the window.\n`@nyc_deals`: flag any active deal that overlaps the other picks (restaurant week, two-for-one show ticket, etc.).\n\nEach pick: venue / address / time / 1-sentence why-this-fits-them / source URL. Each agent honors all hard constraints I named and surfaces conflicts ('only 1 of 47 dining rows is explicitly vegan') rather than silently widening. Coordinator: stitch the picks into a single chronological evening at `.bus-files/today-<date>.md` and reply with the bottom-line plan."
+      "request": "I'm an assistant working on behalf of [Visitor / Resident: name, neighborhood/hotel, budget, vibe, hard constraints (dietary, mobility, hours, etc.), time window]. Compose a Friday-night TODAY brief.\n\n`@nyc_dining`: 2–3 dinner picks (early or late seating per the time window).\n`@nyc_music` / `@nyc_nightlife`: 2 post-dinner picks — one music, one bar/nightlife — picked to fit the same neighborhood or one short hop away.\n`@nyc_culture`: 1 optional pre-dinner pick (gallery opening, evening lecture, late museum hours) if it fits the window.\n`@nyc_deals`: flag any active deal that overlaps the other picks (restaurant week, two-for-one show ticket, etc.).\n\nEach pick: venue / address / time / 1-sentence why-this-fits-them / source URL. Each agent honors all hard constraints I named and surfaces conflicts ('only 1 of 47 dining rows is explicitly vegan') rather than silently widening. Coordinator: stitch the picks into a single chronological evening at `deliverables/today-<date>.md` and reply with the bottom-line plan."
     },
     {
       "title": "Saturday daytime for locals",
-      "request": "For [Resident: neighborhood, interests, kids/no-kids, transit/walk]. `@nyc_outdoor` morning pick (park event, run club, weekend hike), `@nyc_culture` afternoon pick (exhibition or matinee), `@nyc_dining` lunch + dinner picks anchored to the morning + afternoon neighborhoods. `@nyc_deals` flags any active free/discounted entry. Coordinator stitches into `.bus-files/sat-<date>.md`."
+      "request": "For [Resident: neighborhood, interests, kids/no-kids, transit/walk]. `@nyc_outdoor` morning pick (park event, run club, weekend hike), `@nyc_culture` afternoon pick (exhibition or matinee), `@nyc_dining` lunch + dinner picks anchored to the morning + afternoon neighborhoods. `@nyc_deals` flags any active free/discounted entry. Coordinator stitches into `deliverables/sat-<date>.md`."
     },
     {
       "title": "Backfill the NYC corpus",
@@ -23,7 +23,7 @@
     },
     {
       "title": "Run all monitors now",
-      "request": "Every NYC agent: run every rule in your config that hasn't been crawled today. For each, DM yourself the matching `<!-- clawmeets:<rule>-website-monitor-trigger -->`. Reply with the one-line summary per rule. Then `@nyc_deals`: also produce `.bus-files/whats-new-this-week.md` listing every row across all rules with `first_seen_at` in the last 7 days, grouped by agent."
+      "request": "Every NYC agent: run every rule in your config that hasn't been crawled today. For each, DM yourself the matching `<!-- clawmeets:<rule>-website-monitor-trigger -->`. Reply with the one-line summary per rule. Then `@nyc_deals`: also produce `deliverables/whats-new-this-week.md` listing every row across all rules with `first_seen_at` in the last 7 days, grouped by agent."
     }
   ],
   "agents": [
@@ -48,13 +48,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Sample-sale brief for a visitor",
-          "request": "I'm an out-of-town assistant working on behalf of [Visitor: name, neighborhood/hotel, sizing, budget tier, designer preferences, time window — e.g. 'in town Thu–Sun']. Compose a TODAY brief — 3–5 sample sales / trunk shows / pop-ups ranked by fit, each with venue / address / dates+hours / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-fashion-sample-sales.tsv + nyc-fashion-trunk-shows.tsv (rows with first_seen_at in the last 14 days for events, last 90 days for evergreen pop-ups). Reply with the brief inline; .bus-files/today-<date>.md for the durable copy."
+          "request": "I'm an out-of-town assistant working on behalf of [Visitor: name, neighborhood/hotel, sizing, budget tier, designer preferences, time window — e.g. 'in town Thu–Sun']. Compose a TODAY brief — 3–5 sample sales / trunk shows / pop-ups ranked by fit, each with venue / address / dates+hours / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-fashion-sample-sales.tsv + nyc-fashion-trunk-shows.tsv (rows with first_seen_at in the last 14 days for events, last 90 days for evergreen pop-ups). Reply with the brief inline; deliverables/today-<date>.md for the durable copy."
         },
         {
           "category": "TODAY brief",
@@ -64,7 +64,7 @@
         {
           "category": "TODAY brief",
           "title": "High-stakes weekend brief — consult cross-check",
-          "request": "I'm an assistant for [Visitor: in town Fri–Sun, sizing 6–8, budget $$$, designer preferences = Khaite/The Row/Cecilie Bahnsen, no kids, time window = Saturday all day]. Compose a Saturday TODAY brief — 4 picks (2 sample sales + 1 trunk show + 1 boutique). (1) Pull candidates from `dwh_dir/merged/website/nyc-fashion-sample-sales.tsv` + `nyc-fashion-trunk-shows.tsv` + `nyc-fashion-new-boutiques.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,openai \"best sample sales / trunk shows / designer pop-ups in NYC this weekend for sizing 6–8, budget $$$, Khaite/The Row/Cecilie Bahnsen preference\"` and reconcile against the corpus shortlist. (3) Reply with 4 picks, each annotated `[corpus]`, `[web]`, or `[both]`, each with venue / address / dates+hours / why-this-fits-them / source URL. Plus a single-line 'what I cut and why'."
+          "request": "I'm an assistant for [Visitor: in town Fri–Sun, sizing 6–8, budget $$$, designer preferences = Khaite/The Row/Cecilie Bahnsen, no kids, time window = Saturday all day]. Compose a Saturday TODAY brief — 4 picks (2 sample sales + 1 trunk show + 1 boutique). (1) Pull candidates from `dwh_dir/merged/website/nyc-fashion-sample-sales.tsv` + `nyc-fashion-trunk-shows.tsv` + `nyc-fashion-new-boutiques.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,openai \"best sample sales / trunk shows / designer pop-ups in NYC this weekend for sizing 6–8, budget $$$, Khaite/The Row/Cecilie Bahnsen preference\"` and reconcile against the corpus shortlist. (3) Reply with 4 picks, each annotated `[corpus]`, `[web]`, or `[both]`, each with venue / address / dates+hours / why-this-fits-them / source URL. Plus a single-line 'what I cut and why'."
         },
         {
           "category": "Sync",
@@ -110,13 +110,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Saturday outdoor for a local",
-          "request": "For [Resident: neighborhood, fitness level, transit-only or car, kids/no-kids, time window]. Build a Saturday outdoor brief — 3–5 picks (morning park event or run, afternoon activity, optional weekend-hike alternative if they have a car). Each pick: venue / address / time / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-outdoor-park-events.tsv + nyc-outdoor-running-clubs.tsv + nyc-outdoor-weekend-hikes.tsv (events: last 14 days; evergreen clubs: last 90 days). Reply with the brief inline; .bus-files/today-<date>.md for the durable copy."
+          "request": "For [Resident: neighborhood, fitness level, transit-only or car, kids/no-kids, time window]. Build a Saturday outdoor brief — 3–5 picks (morning park event or run, afternoon activity, optional weekend-hike alternative if they have a car). Each pick: venue / address / time / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-outdoor-park-events.tsv + nyc-outdoor-running-clubs.tsv + nyc-outdoor-weekend-hikes.tsv (events: last 14 days; evergreen clubs: last 90 days). Reply with the brief inline; deliverables/today-<date>.md for the durable copy."
         },
         {
           "category": "TODAY brief",
@@ -126,7 +126,7 @@
         {
           "category": "TODAY brief",
           "title": "Weekend escape — consult cross-check",
-          "request": "For [Visitor: has rental car, fitness level intermediate, overnight Sat–Sun, no kids, weather-sensitive]. Compose a weekend escape brief — 1 anchor hike + 1 alt for rain. (1) Pull candidates from `dwh_dir/merged/website/nyc-outdoor-weekend-hikes.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,openai \"best 2 weekend hikes within 2hr drive of NYC for intermediate fitness, overnight-friendly trailhead towns, what's the trail condition + weather forecast for this Sat–Sun\"` and reconcile. (3) Reply with 2 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with trailhead / drive-time / hike length / lodging anchor / why-this-fits-them / source URL."
+          "request": "For [Visitor: has rental car, fitness level intermediate, overnight Sat–Sun, no kids, weather-sensitive]. Compose a weekend escape brief — 1 anchor hike + 1 alt for rain. (1) Pull candidates from `dwh_dir/merged/website/nyc-outdoor-weekend-hikes.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,openai \"best 2 weekend hikes within 2hr drive of NYC for intermediate fitness, overnight-friendly trailhead towns, what's the trail condition + weather forecast for this Sat–Sun\"` and reconcile. (3) Reply with 2 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with trailhead / drive-time / hike length / lodging anchor / why-this-fits-them / source URL."
         },
         {
           "category": "Sync",
@@ -172,13 +172,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Cultural afternoon for a visitor",
-          "request": "I'm an assistant for [Visitor: name, neighborhood/hotel, interests (e.g. contemporary art, modernist photography, off-Broadway theater), budget tier, time window, museums/galleries already visited]. Compose a cultural-afternoon TODAY brief — 3–4 picks (1 anchor exhibition + 1–2 smaller galleries + optional evening reading or talk if it fits the window). Each pick: venue / address / hours+ticket-window / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-culture-exhibitions.tsv + nyc-culture-lectures-readings.tsv (last 14 days for events; last 90 days for ongoing exhibitions). Reply inline; .bus-files/today-<date>.md for durable copy."
+          "request": "I'm an assistant for [Visitor: name, neighborhood/hotel, interests (e.g. contemporary art, modernist photography, off-Broadway theater), budget tier, time window, museums/galleries already visited]. Compose a cultural-afternoon TODAY brief — 3–4 picks (1 anchor exhibition + 1–2 smaller galleries + optional evening reading or talk if it fits the window). Each pick: venue / address / hours+ticket-window / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-culture-exhibitions.tsv + nyc-culture-lectures-readings.tsv (last 14 days for events; last 90 days for ongoing exhibitions). Reply inline; deliverables/today-<date>.md for durable copy."
         },
         {
           "category": "TODAY brief",
@@ -188,7 +188,7 @@
         {
           "category": "TODAY brief",
           "title": "Anniversary cultural day — consult cross-check",
-          "request": "I'm an assistant for [Visitor: anniversary trip Fri–Sun, neighborhood UWS hotel, interests = contemporary art + modernist photography, budget $$$$, already visited the Met + MoMA last year, time window = Saturday afternoon + evening]. Compose a cultural-day TODAY brief — 4 picks (1 anchor exhibition + 2 smaller galleries + 1 evening event). (1) Pull candidates from `dwh_dir/merged/website/nyc-culture-exhibitions.tsv` + `nyc-culture-lectures-readings.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,claude \"best 4 contemporary-art + modernist-photography picks in NYC this Saturday for an anniversary visit, $$$$ budget, already saw Met/MoMA, evening event OK\"` (use the parallel mode — anniversary is high-stakes) and reconcile against corpus shortlist. (3) Reply with 4 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with venue / address / hours+ticket-window / why-this-fits-them / source URL. Plus a single-line 'what I cut and why'."
+          "request": "I'm an assistant for [Visitor: anniversary trip Fri–Sun, neighborhood UWS hotel, interests = contemporary art + modernist photography, budget $$$$, already visited the Met + MoMA last year, time window = Saturday afternoon + evening]. Compose a cultural-day TODAY brief — 4 picks (1 anchor exhibition + 2 smaller galleries + 1 evening event). (1) Pull candidates from `dwh_dir/merged/website/nyc-culture-exhibitions.tsv` + `nyc-culture-lectures-readings.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,claude \"best 4 contemporary-art + modernist-photography picks in NYC this Saturday for an anniversary visit, $$$$ budget, already saw Met/MoMA, evening event OK\"` (use the parallel mode — anniversary is high-stakes) and reconcile against corpus shortlist. (3) Reply with 4 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with venue / address / hours+ticket-window / why-this-fits-them / source URL. Plus a single-line 'what I cut and why'."
         },
         {
           "category": "Sync",
@@ -233,13 +233,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Tonight's show picks",
-          "request": "I'm an assistant for [Visitor or Resident: neighborhood/hotel, genre preference (jazz / indie / classical / electronic), budget tier, time window]. Compose a tonight TODAY brief — 3–4 show picks across the genres they listed, each with venue / address / set times / cover or ticket / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-music-jazz-clubs.tsv + nyc-music-indie-shows.tsv + nyc-music-classical-opera.tsv (rows with show date == tonight or tomorrow; ignore everything else). Reply inline; .bus-files/today-<date>.md for durable copy."
+          "request": "I'm an assistant for [Visitor or Resident: neighborhood/hotel, genre preference (jazz / indie / classical / electronic), budget tier, time window]. Compose a tonight TODAY brief — 3–4 show picks across the genres they listed, each with venue / address / set times / cover or ticket / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-music-jazz-clubs.tsv + nyc-music-indie-shows.tsv + nyc-music-classical-opera.tsv (rows with show date == tonight or tomorrow; ignore everything else). Reply inline; deliverables/today-<date>.md for durable copy."
         },
         {
           "category": "TODAY brief",
@@ -249,7 +249,7 @@
         {
           "category": "TODAY brief",
           "title": "Anniversary jazz night — consult cross-check",
-          "request": "I'm an assistant for [Visitor: anniversary night, neighborhood Greenwich Village hotel, jazz preference = hard bop + vocal jazz, budget $$$, party of 2, time window = Sat 8pm–1am, prior artists liked = Lee Konitz/Cécile McLorin Salvant]. Compose a jazz-night TODAY brief — 2 picks (one early-set anchor + one late-set chaser). (1) Pull candidates from `dwh_dir/merged/website/nyc-music-jazz-clubs.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,claude \"best 2 jazz clubs in Greenwich Village this Saturday for hard bop + vocal jazz, $$$ budget, prior favorites Lee Konitz/Cécile McLorin Salvant, what's the lineup + set times for tonight\"` and reconcile. (3) Reply with 2 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with venue / address / set times / cover / artist / why-this-fits-them / source URL."
+          "request": "I'm an assistant for [Visitor: anniversary night, neighborhood Greenwich Village hotel, jazz preference = hard bop + vocal jazz, budget $$$, party of 2, time window = Sat 8pm–1am, prior artists liked = Lee Konitz/Cécile McLorin Salvant]. Compose a jazz-night TODAY brief — 2 picks (one early-set anchor + one late-set chaser). (1) Pull candidates from `dwh_dir/merged/website/nyc-music-jazz-clubs.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,claude \"best 2 jazz clubs in Greenwich Village this Saturday for hard bop + vocal jazz, $$$ budget, prior favorites Lee Konitz/Cécile McLorin Salvant, what's the lineup + set times for tonight\"` and reconcile. (3) Reply with 2 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with venue / address / set times / cover / artist / why-this-fits-them / source URL."
         },
         {
           "category": "Sync",
@@ -294,13 +294,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Tonight after dinner",
-          "request": "I'm an assistant for [Visitor or Resident: neighborhood, vibe (lounge / dance floor / dive / cocktail bar / comedy), party size, dress code tolerance, time window]. Compose a tonight TODAY brief — 3–4 post-dinner picks ordered as a route from a starting neighborhood. Each pick: venue / address / opening hours+last-call / cover or reservation status / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-nightlife-cocktail-bars.tsv + nyc-nightlife-late-night-venues.tsv + nyc-nightlife-comedy.tsv (evergreen venues last 90 days; one-off events last 14 days). Reply inline; .bus-files/today-<date>.md for durable copy."
+          "request": "I'm an assistant for [Visitor or Resident: neighborhood, vibe (lounge / dance floor / dive / cocktail bar / comedy), party size, dress code tolerance, time window]. Compose a tonight TODAY brief — 3–4 post-dinner picks ordered as a route from a starting neighborhood. Each pick: venue / address / opening hours+last-call / cover or reservation status / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-nightlife-cocktail-bars.tsv + nyc-nightlife-late-night-venues.tsv + nyc-nightlife-comedy.tsv (evergreen venues last 90 days; one-off events last 14 days). Reply inline; deliverables/today-<date>.md for durable copy."
         },
         {
           "category": "TODAY brief",
@@ -310,7 +310,7 @@
         {
           "category": "TODAY brief",
           "title": "Bachelorette night — consult cross-check",
-          "request": "I'm an assistant for [Visitor: bachelorette weekend, party of 8, neighborhood LES, vibe = dance-floor cocktail-bar mix (no dive, no comedy), budget $$$, dress code = cocktail-attire OK, time window = Sat 10pm–3am]. Compose a tonight TODAY brief — 3 venue picks ordered as a crawl. (1) Pull candidates from `dwh_dir/merged/website/nyc-nightlife-cocktail-bars.tsv` + `nyc-nightlife-late-night-venues.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,claude \"best 3 LES venues this Saturday for a bachelorette party of 8, mix of cocktail bar + dance floor, $$$ budget, cocktail-attire OK, open until 3am, which take large group reservations\"` and reconcile. (3) Reply with 3 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with venue / address / opening hours+last-call / cover or reservation status / why-this-fits-them / source URL."
+          "request": "I'm an assistant for [Visitor: bachelorette weekend, party of 8, neighborhood LES, vibe = dance-floor cocktail-bar mix (no dive, no comedy), budget $$$, dress code = cocktail-attire OK, time window = Sat 10pm–3am]. Compose a tonight TODAY brief — 3 venue picks ordered as a crawl. (1) Pull candidates from `dwh_dir/merged/website/nyc-nightlife-cocktail-bars.tsv` + `nyc-nightlife-late-night-venues.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,claude \"best 3 LES venues this Saturday for a bachelorette party of 8, mix of cocktail bar + dance floor, $$$ budget, cocktail-attire OK, open until 3am, which take large group reservations\"` and reconcile. (3) Reply with 3 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with venue / address / opening hours+last-call / cover or reservation status / why-this-fits-them / source URL."
         },
         {
           "category": "Sync",
@@ -356,13 +356,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Tonight's dinner picks",
-          "request": "I'm an assistant for [Visitor or Resident: neighborhood/hotel, cuisine preference, budget tier ($ / $$ / $$$ / $$$$), dietary constraints (vegan, gluten-free, allergies), party size, reservation flexibility (walk-in OK vs. only-with-rezzy)]. Compose a tonight TODAY brief — 3–5 dinner picks ranked by fit. Each pick: restaurant / neighborhood / cuisine / price tier / dietary fit / reservation status / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-dining-new-openings.tsv + nyc-dining-neighborhood-gems.tsv (openings: last 30 days; gems: last 90 days). Reply inline; .bus-files/today-<date>.md for durable copy."
+          "request": "I'm an assistant for [Visitor or Resident: neighborhood/hotel, cuisine preference, budget tier ($ / $$ / $$$ / $$$$), dietary constraints (vegan, gluten-free, allergies), party size, reservation flexibility (walk-in OK vs. only-with-rezzy)]. Compose a tonight TODAY brief — 3–5 dinner picks ranked by fit. Each pick: restaurant / neighborhood / cuisine / price tier / dietary fit / reservation status / why-this-fits-them / source URL. Pull from dwh_dir/merged/website/nyc-dining-new-openings.tsv + nyc-dining-neighborhood-gems.tsv (openings: last 30 days; gems: last 90 days). Reply inline; deliverables/today-<date>.md for durable copy."
         },
         {
           "category": "TODAY brief",
@@ -372,7 +372,7 @@
         {
           "category": "TODAY brief",
           "title": "Anniversary tasting menu — consult cross-check",
-          "request": "I'm an assistant for [Visitor: anniversary trip, neighborhood UWS hotel, cuisine openness = French/Japanese/New American, budget $$$$, dietary = no shellfish, party of 2, reservation flexibility = will book ahead, time window = Sat 7–10pm, occasion = 10th anniversary]. Compose a tonight TODAY brief — 3 tasting-menu picks. (1) Pull candidates from `dwh_dir/merged/website/nyc-dining-tasting-menus.tsv` + `nyc-dining-new-openings.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,claude \"best 3 NYC tasting menus for a 10th anniversary couple, $$$$ budget, no shellfish, French/Japanese/New American, party of 2, willing to book ahead, available this Saturday 7–10pm — include Resy/Tock availability if known\"` and reconcile. (3) Reply with 3 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with restaurant / cuisine / course count / price per person / typical lead time / why-this-fits-them / source URL."
+          "request": "I'm an assistant for [Visitor: anniversary trip, neighborhood UWS hotel, cuisine openness = French/Japanese/New American, budget $$$$, dietary = no shellfish, party of 2, reservation flexibility = will book ahead, time window = Sat 7–10pm, occasion = 10th anniversary]. Compose a tonight TODAY brief — 3 tasting-menu picks. (1) Pull candidates from `dwh_dir/merged/website/nyc-dining-tasting-menus.tsv` + `nyc-dining-new-openings.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,claude \"best 3 NYC tasting menus for a 10th anniversary couple, $$$$ budget, no shellfish, French/Japanese/New American, party of 2, willing to book ahead, available this Saturday 7–10pm — include Resy/Tock availability if known\"` and reconcile. (3) Reply with 3 picks, each annotated `[corpus]`, `[web]`, or `[both]`, with restaurant / cuisine / course count / price per person / typical lead time / why-this-fits-them / source URL."
         },
         {
           "category": "Sync",
@@ -417,13 +417,13 @@
       "dwh_dir": "/mnt/dwh",
       "skills": [
         "website-monitor",
-        "clawmeets-consult"
+        "consult"
       ],
       "sample_requests": [
         {
           "category": "TODAY brief",
           "title": "Active deals this week",
-          "request": "I'm an assistant for [Visitor or Resident: categories of interest (dining / shopping / culture / nightlife / outdoor), neighborhood, budget tier, time window]. Compose a 'deals active this week' TODAY brief — 4–6 picks across the categories they listed, ordered by expiry-soonness. Each pick: title / category / venue or vendor / hours+expiry / dollar value (or % off) / why-this-fits-them / source URL. Pull from every rule in dwh_dir/merged/website/nyc-deals-*.tsv (last 7–14 days — deals expire fast). Reply inline; .bus-files/today-<date>.md for durable copy. Flag any deal expiring in < 48h as URGENT."
+          "request": "I'm an assistant for [Visitor or Resident: categories of interest (dining / shopping / culture / nightlife / outdoor), neighborhood, budget tier, time window]. Compose a 'deals active this week' TODAY brief — 4–6 picks across the categories they listed, ordered by expiry-soonness. Each pick: title / category / venue or vendor / hours+expiry / dollar value (or % off) / why-this-fits-them / source URL. Pull from every rule in dwh_dir/merged/website/nyc-deals-*.tsv (last 7–14 days — deals expire fast). Reply inline; deliverables/today-<date>.md for durable copy. Flag any deal expiring in < 48h as URGENT."
         },
         {
           "category": "TODAY brief",
@@ -433,7 +433,7 @@
         {
           "category": "TODAY brief",
           "title": "Deal-driven weekend — consult cross-check",
-          "request": "For [Visitor: family of 4 (2 kids age 8 + 11), in town Fri–Sun, neighborhood Midtown hotel, budget tight (target $40/person/day), categories = culture + dining + outdoor]. Compose a deal-driven weekend brief — 5 picks ordered by expiry-soonness across Fri/Sat/Sun. (1) Pull candidates from every `dwh_dir/merged/website/nyc-deals-*.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/clawmeets-consult.json gemini,openai \"this weekend in NYC: best 5 family-of-4 deals (2 kids 8 + 11) across culture + dining + outdoor, target $40/person/day, Midtown-anchored — list explicit expiration dates\"` and reconcile against corpus. (3) Reply with 5 picks, each annotated `[corpus]`, `[web]`, or `[both]`, ordered by expiry, with title / category / venue / hours+expiry / actual cost per person / why-this-fits-them / source URL. Flag any deal expiring < 48h as URGENT."
+          "request": "For [Visitor: family of 4 (2 kids age 8 + 11), in town Fri–Sun, neighborhood Midtown hotel, budget tight (target $40/person/day), categories = culture + dining + outdoor]. Compose a deal-driven weekend brief — 5 picks ordered by expiry-soonness across Fri/Sat/Sun. (1) Pull candidates from every `dwh_dir/merged/website/nyc-deals-*.tsv`. (2) Invoke `clawmeets consult --config $CLAWMEETS_AGENT_DIR/skill-hub/configs/consult.json gemini,openai \"this weekend in NYC: best 5 family-of-4 deals (2 kids 8 + 11) across culture + dining + outdoor, target $40/person/day, Midtown-anchored — list explicit expiration dates\"` and reconcile against corpus. (3) Reply with 5 picks, each annotated `[corpus]`, `[web]`, or `[both]`, ordered by expiry, with title / category / venue / hours+expiry / actual cost per person / why-this-fits-them / source URL. Flag any deal expiring < 48h as URGENT."
         },
         {
           "category": "Sync",

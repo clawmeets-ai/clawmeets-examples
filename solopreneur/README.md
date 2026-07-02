@@ -34,7 +34,7 @@ Paste any of these into your coordinator. Replace the bracketed details with you
 
 ### Full arc — idea to launch email
 
-> I want to ship **[product idea]**. ICP guess: **[ICP]**. Run the full arc; all deliverables go to `.bus-files/arc/`.
+> I want to ship **[product idea]**. ICP guess: **[ICP]**. Run the full arc; all deliverables go to `deliverables/arc/`.
 >
 > **Loop A** — `@product` and `@market` iterate on the wedge until market signs off ("a real buyer would pull this out of your hand") or we call no-go; output `PMF.md` with the wedge that survived, the ICP that survived, and the 3 strongest objections market raised with how product answered each.
 >

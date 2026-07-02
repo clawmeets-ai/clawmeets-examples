@@ -20,13 +20,11 @@ You can combine templates by running `clawmeets init --from-url` multiple times 
 |----------|--------|-------------|
 | [`career`](./career/README.md) | Career Coach, Researcher, Interview Coach, Outreach Writer | Personal job-search crew working from your resume and target list |
 | [`memories`](./memories/README.md) | Curator, Memoirist, Relationship Mapper, Bookmaker | Memory Lane crew that curates your photos and turns them into books, cards, and stories |
-| [`household`](./household/README.md) | Meal Planner, Grocery Buyer, Family Scheduler, Home Keeper | Weekly life-management crew: meals, groceries, family calendar, and home upkeep |
-| [`wellness`](./wellness/README.md) | Nutritionist, Fitness Coach, Sleep Coach, Mind Coach | Health & wellness crew working from your goals, your wearable data, and the life you actually have time for |
 | [`finance`](./finance/README.md) | Budget Analyst, Investment Advisor, Tax Strategist | Personal CFO crew: monthly budget, investments, and tax strategy |
 | [`solopreneur`](./solopreneur/README.md) | Product, Market, Investor, Branding | Three iterative loops orchestrated by your assistant — PMF (product ↔ market), pitch (product ↔ investor), Amazon-style announcement email (branding ↔ product) — pivots back on wedge or defensibility failure |
 | [`engineering`](./engineering/README.md) | Designer, Backend, Frontend, DevOps | Full-stack software development team |
 | [`data`](./data/README.md) | DB Sync, Drive Sync, API Sync, Data Scientist | Business data team: sync DB / Drive / APIs into a local warehouse; one analytical agent explores, hypothesis-tests, builds features, answers business questions, and promotes mature analyses to scheduled derived views |
-| [`personal_data`](./personal_data/README.md) | Mailbox, Calendar, Photo, Data Organizer | Personal data warehouse over standard protocols (IMAP+SMTP, CalDAV, macOS Photos) — sync your real mail / calendar / photo metadata into a local warehouse on a schedule, AND address each agent conversationally for ad-hoc search/send/lookup. Provider-agnostic (Gmail app-password, iCloud, Fastmail, Outlook, ProtonMail Bridge, Nextcloud, Radicale, self-hosted). `@data_organizer` owns the derivation layer (rule design + cross-template handoff to finance / wellness) |
+| [`personal_data`](./personal_data/README.md) | Mailbox, Calendar, Photo, Data Organizer | Personal data warehouse over standard protocols (IMAP+SMTP, CalDAV, macOS Photos) — sync your real mail / calendar / photo metadata into a local warehouse on a schedule, AND address each agent conversationally for ad-hoc search/send/lookup. Provider-agnostic (Gmail app-password, iCloud, Fastmail, Outlook, ProtonMail Bridge, Nextcloud, Radicale, self-hosted). `@data_organizer` owns the derivation layer (rule design + cross-template handoff to finance) |
 | [`retail`](./retail/README.md) | Market Analyst, Finance, Marketing | New locations, product-line launches, and growth moves for retail/restaurant/service owners |
 | [`restaurant`](./restaurant/README.md) | Market Analyst, Menu Finance, Brand, Designer | Restaurant audit + redesign crew: crawl your site, harvest menu + prices, read PMF and pricing, sharpen positioning, ship the new visual identity and a working HTML mockup of the redesigned homepage + menu |
 | [`sales`](./sales/README.md) | Sales Dev, Inside Sales, Field Sales | Top-of-funnel pipeline crew: SDR builds the list and qualifies, Inside Sales runs cold email + digital follow-up cadence, Field Sales runs cold-visit pitch + in-person follow-up cadence |
@@ -40,8 +38,7 @@ Each template's per-folder `README.md` ships with 6–8 copy-paste project reque
 
 ## Template Format
 
-Each template is a `setup.json` file with agent definitions and, optionally, a
-configuration block for the user's personal `{username}-assistant` agent:
+Each template is a `setup.json` file with agent definitions. Templates describe worker agents; the user's personal `{username}-assistant` stays team-agnostic and coordinates across every installed template — any team-specific cues belong in the `sample_requests` bodies, which the coordinator reads as the project request.
 
 ```json
 {
@@ -52,16 +49,6 @@ configuration block for the user's personal `{username}-assistant` agent:
   "cats": ["work"],
   "blurb": "Short one-line card description shown on the Welcome page.",
   "pitch": "Longer pitch shown in the Welcome page detail drawer once the card is clicked.",
-  "assistant": {
-    "knowledge_dir": "./owner",
-    "llm_provider": "claude",
-    "llm_model": "claude-opus-4-7",
-    "capabilities": ["coordination", "planning", "delegation"],
-    "profile": "Detailed specialty profile for the assistant (used in generated CLAUDE.md)",
-    "description": "One-line override of the assistant's description",
-    "mcp_servers": ["gmail", "google-calendar"],
-    "create_frontdesk_project": true
-  },
   "agents": [
     {
       "name": "agent_name",
@@ -103,10 +90,11 @@ user's personal assistant (`{username}-assistant`) — its `knowledge_dir`,
 the server via `PUT /agents/{assistant_id}`; any `mcp_servers` are installed
 via `POST /agents/{assistant_id}/mcps`. Set `create_frontdesk_project: true`
 to also have `clawmeets init` ensure a public Front Desk project
-(`{username}-fd-assistant`) alongside the private `DM-{username}` project
-that registration always creates — call is idempotent, so re-running init is
-safe. Off by default so plain interactive `clawmeets init` (no template) and
-templates that don't opt in leave the user with only the private DM channel.
+(`{username}-fd-assistant`) alongside the per-agent DM project
+(`{username}-dm-assistant`) that registration lazy-creates — call is
+idempotent, so re-running init is safe. Off by default so plain interactive
+`clawmeets init` (no template) and templates that don't opt in leave the
+user with only the per-agent DM channel.
 
 **CLAUDE.md is never overwritten.** If `{knowledge_dir}/CLAUDE.md` already
 exists for the assistant or any worker agent, `clawmeets init` leaves it
